@@ -48,8 +48,13 @@ func run() error {
 		return err
 	}
 
+	trans, err := api.RegisterValidation()
+	if err != nil {
+		return err
+	}
+
 	router := gin.Default()
-	api.Register(router, db)
+	api.Register(router, db, trans)
 
 	slog.Info("Server startup complete")
 	err = router.Run(":8080")

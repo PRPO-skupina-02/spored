@@ -33,7 +33,7 @@ func newTheaterResponse(theater models.Theater) TheaterResponse {
 //	@Tags			theaters
 //	@Accept			json
 //	@Produce		json
-//	@Success		200	{object}	[]TheaterRequest
+//	@Success		200	{object}	[]TheaterResponse
 //	@Failure		400	{object}	HttpError
 //	@Failure		404	{object}	HttpError
 //	@Failure		500	{object}	HttpError
@@ -69,7 +69,7 @@ type TheaterRequest struct {
 //	@Accept			json
 //	@Produce		json
 //	@Param			request	body		TheaterRequest	true	"request body"
-//	@Success		200		{object}	[]TheaterRequest
+//	@Success		200		{object}	TheaterResponse
 //	@Failure		400		{object}	HttpError
 //	@Failure		404		{object}	HttpError
 //	@Failure		500		{object}	HttpError
@@ -93,7 +93,52 @@ func TheatersCreate(c *gin.Context) {
 		return
 	}
 
-	response := newTheaterResponse(theater)
+	c.JSON(http.StatusOK, newTheaterResponse(theater))
+}
 
-	c.JSON(http.StatusOK, response)
+// TheatersUpdate
+//
+//	@Id				TheatersUpdate
+//	@Summary		Update theater
+//	@Description	Update theater
+//	@Tags			theaters
+//	@Accept			json
+//	@Produce		json
+//	@Param			uuid	path		string			true	"Theater UUID"	Format(uuid)
+//	@Param			request	body		TheaterRequest	true	"request body"
+//	@Success		200		{object}	TheaterResponse
+//	@Failure		400		{object}	HttpError
+//	@Failure		404		{object}	HttpError
+//	@Failure		500		{object}	HttpError
+//	@Router			/theaters/{uuid} [put]
+func TheatersUpdate(c *gin.Context) {
+	tx := GetContextTransaction(c)
+	uuidParam, ok := getUUIDParam(c)
+	if !ok {
+		return
+	}
+
+	var req TheaterRequest
+	err := c.ShouldBindJSON(&req)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	theater := models.Theater{
+		UUID: uuidParam,
+	}
+	if err := tx.Where(&theater).First(&theater).Error; err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	theater.Name = req.Name
+
+	if err := tx.Save(&theater).Error; err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusOK, newTheaterResponse(theater))
 }

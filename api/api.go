@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	ut "github.com/go-playground/universal-translator"
 	_ "github.com/orgs/PRPO-skupina-02/Spored/api/docs"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -17,9 +18,7 @@ import (
 //	@host		localhost:8080
 //	@BasePath	/api/v1
 
-func Register(router *gin.Engine, db *gorm.DB) {
-	trans := RegisterValidation()
-
+func Register(router *gin.Engine, db *gorm.DB, trans ut.Translator) {
 	// Healthcheck
 	router.GET("/healthcheck", healthcheck)
 
@@ -36,6 +35,7 @@ func Register(router *gin.Engine, db *gorm.DB) {
 	theaters := v1.Group("/theaters")
 	theaters.GET("/", TheatersList)
 	theaters.POST("/", TheatersCreate)
+	theaters.PUT("/:uuid", TheatersUpdate)
 
 }
 
