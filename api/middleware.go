@@ -1,10 +1,13 @@
 package api
 
 import (
+	"errors"
 	"net/http"
+	"slices"
 
 	"github.com/gin-gonic/gin"
 	ut "github.com/go-playground/universal-translator"
+	"github.com/go-playground/validator/v10"
 	"gorm.io/gorm"
 )
 
@@ -24,13 +27,26 @@ func TransactionMiddleware(DB *gorm.DB) gin.HandlerFunc {
 }
 
 func ErrorMiddleware(c *gin.Context) {
+	trans := GetContextTranslation(c)
+
 	c.Next()
 
-	if len(c.Errors) > 0 {
-		c.JSON(http.StatusInternalServerError, map[string]any{
-			"error": c.Errors.Last().Err,
-		})
+	if len(c.Errors) == 0 {
+		return
 	}
+
+	err := c.Errors.Last()
+
+	var verr validator.ValidationErrors
+	if errors.As(err, &verr) {
+		c.Errors = slices.Delete(c.Errors, len(c.Errors)-1, len(c.Errors))
+		c.JSON(http.StatusBadRequest, NewValidationError(verr, trans))
+		return
+	}
+
+	c.JSON(http.StatusInternalServerError, map[string]any{
+		"error": c.Errors.Last().Err,
+	})
 }
 
 func TranslationMiddleware(trans ut.Translator) gin.HandlerFunc {

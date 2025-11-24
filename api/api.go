@@ -4,23 +4,36 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	_ "github.com/orgs/PRPO-skupina-02/Spored/api/docs"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"gorm.io/gorm"
 )
 
-func Register(router *gin.Engine, db *gorm.DB) {
+//	@title			Spored API
+//	@version		1.0
+//	@description	API za upravljanje z kinodvoranami in njihovim sporedom
 
+//	@host		localhost:8080
+//	@BasePath	/api/v1
+
+func Register(router *gin.Engine, db *gorm.DB) {
 	trans := RegisterValidation()
 
 	// Healthcheck
 	router.GET("/healthcheck", healthcheck)
 
-	api := router.Group("/api")
-	api.Use(ErrorMiddleware)
-	api.Use(TransactionMiddleware(db))
-	api.Use(TranslationMiddleware(trans))
+	// Swagger
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+	// REST API
+	v1 := router.Group("/api/v1")
+	v1.Use(TransactionMiddleware(db))
+	v1.Use(TranslationMiddleware(trans))
+	v1.Use(ErrorMiddleware)
 
 	// Theaters
-	theaters := api.Group("/theaters")
+	theaters := v1.Group("/theaters")
 	theaters.GET("/", TheatersList)
 	theaters.POST("/", TheatersCreate)
 

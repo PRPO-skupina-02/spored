@@ -25,6 +25,19 @@ func newTheaterResponse(theater models.Theater) TheaterResponse {
 	}
 }
 
+// TheatersList
+//
+//	@Id				TheatersList
+//	@Summary		List theaters
+//	@Description	List theaters
+//	@Tags			theaters
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{object}	[]TheaterRequest
+//	@Failure		400	{object}	HttpError
+//	@Failure		404	{object}	HttpError
+//	@Failure		500	{object}	HttpError
+//	@Router			/theaters [get]
 func TheatersList(c *gin.Context) {
 	tx := GetContextTransaction(c)
 
@@ -47,13 +60,27 @@ type TheaterRequest struct {
 	Name string `json:"name" binding:"required,min=3"`
 }
 
+// TheatersCreate
+//
+//	@Id				TheatersCreate
+//	@Summary		Create theater
+//	@Description	Create theater
+//	@Tags			theaters
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		TheaterRequest	true	"request body"
+//	@Success		200		{object}	[]TheaterRequest
+//	@Failure		400		{object}	HttpError
+//	@Failure		404		{object}	HttpError
+//	@Failure		500		{object}	HttpError
+//	@Router			/theaters [post]
 func TheatersCreate(c *gin.Context) {
 	tx := GetContextTransaction(c)
 
 	var req TheaterRequest
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
-		ValidationError(c, err)
+		_ = c.Error(err)
 		return
 	}
 

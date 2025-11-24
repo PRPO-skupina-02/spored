@@ -1,0 +1,95 @@
+basePath: /api/v1
+definitions:
+  api.HttpError:
+    properties:
+      code:
+        type: integer
+      fields:
+        additionalProperties:
+          type: string
+        type: object
+      message:
+        type: string
+    type: object
+  api.TheaterRequest:
+    properties:
+      name:
+        minLength: 3
+        type: string
+    required:
+    - name
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API za upravljanje z kinodvoranami in njihovim sporedom
+  title: Spored API
+  version: "1.0"
+paths:
+  /theaters:
+    get:
+      consumes:
+      - application/json
+      description: List theaters
+      operationId: TheatersList
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/api.TheaterRequest'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.HttpError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/api.HttpError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.HttpError'
+      summary: List theaters
+      tags:
+      - theaters
+    post:
+      consumes:
+      - application/json
+      description: Create theater
+      operationId: TheatersCreate
+      parameters:
+      - description: request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.TheaterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/api.TheaterRequest'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.HttpError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/api.HttpError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.HttpError'
+      summary: Create theater
+      tags:
+      - theaters
+swagger: "2.0"
