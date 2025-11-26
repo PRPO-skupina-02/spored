@@ -41,8 +41,8 @@ func newTheaterResponse(theater models.Theater) TheaterResponse {
 func TheatersList(c *gin.Context) {
 	tx := GetContextTransaction(c)
 
-	var theaters []models.Theater
-	if err := tx.Find(&theaters).Error; err != nil {
+	theaters, err := models.GetTheaters(tx)
+	if err != nil {
 		_ = c.Error(err)
 		return
 	}
@@ -88,12 +88,14 @@ func TheatersCreate(c *gin.Context) {
 		UUID: uuid.New(),
 		Name: req.Name,
 	}
-	if err := tx.Create(&theater).Error; err != nil {
+
+	err = theater.Create(tx)
+	if err != nil {
 		_ = c.Error(err)
 		return
 	}
 
-	c.JSON(http.StatusOK, newTheaterResponse(theater))
+	c.JSON(http.StatusCreated, newTheaterResponse(theater))
 }
 
 // TheatersUpdate
@@ -125,17 +127,16 @@ func TheatersUpdate(c *gin.Context) {
 		return
 	}
 
-	theater := models.Theater{
-		UUID: uuidParam,
-	}
-	if err := tx.Where(&theater).First(&theater).Error; err != nil {
+	theater, err := models.GetTheater(tx, uuidParam)
+	if err != nil {
 		_ = c.Error(err)
 		return
 	}
 
 	theater.Name = req.Name
 
-	if err := tx.Save(&theater).Error; err != nil {
+	err = theater.Save(tx)
+	if err != nil {
 		_ = c.Error(err)
 		return
 	}
@@ -164,16 +165,8 @@ func TheatersDelete(c *gin.Context) {
 		return
 	}
 
-	theater := models.Theater{
-		UUID: uuidParam,
-	}
-
-	if err := tx.Where(&theater).First(&theater).Error; err != nil {
-		_ = c.Error(err)
-		return
-	}
-
-	if err := tx.Delete(&theater).Error; err != nil {
+	err := models.DeleteTheater(tx, uuidParam)
+	if err != nil {
 		_ = c.Error(err)
 		return
 	}
