@@ -6,15 +6,14 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/orgs/PRPO-skupina-02/Spored/common"
-	gormpostgres "gorm.io/driver/postgres"
-	"gorm.io/gorm"
-
 	"github.com/golang-migrate/migrate/v4"
 	migratepostgres "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/golang-migrate/migrate/v4/source/iofs"
 	_ "github.com/lib/pq"
+	"github.com/orgs/PRPO-skupina-02/Spored/common"
+	gormpostgres "gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 //go:embed migrations/*.sql
@@ -34,13 +33,17 @@ func OpenAndMigrate() (*gorm.DB, error) {
 	return db, nil
 }
 
-func Open() (*gorm.DB, error) {
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
+func GetProdDSN() string {
+	return fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
 		common.GetEnv("POSTGRES_IP"),
 		common.GetEnv("POSTGRES_USERNAME"),
 		common.GetEnv("POSTGRES_PASSWORD"),
 		common.GetEnv("POSTGRES_DATABASE_NAME"),
 		common.GetEnv("POSTGRES_PORT"))
+}
+
+func Open() (*gorm.DB, error) {
+	dsn := GetProdDSN()
 
 	db, err := gorm.Open(gormpostgres.Open(dsn), &gorm.Config{TranslateError: true})
 	if err != nil {
@@ -77,4 +80,8 @@ func Migrate(db *gorm.DB) error {
 
 	slog.Debug("Database migrated successfully")
 	return nil
+}
+
+func GetMigrationsFs() embed.FS {
+	return migrationsFS
 }

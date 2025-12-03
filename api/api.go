@@ -33,8 +33,8 @@ func Register(router *gin.Engine, db *gorm.DB, trans ut.Translator) {
 
 	// Theaters
 	theaters := v1.Group("/theaters")
-	theaters.GET("/", TheatersList)
-	theaters.POST("/", TheatersCreate)
+	theaters.GET("", TheatersList)
+	theaters.POST("", TheatersCreate)
 	theaters.PUT("/:uuid", TheatersUpdate)
 	theaters.DELETE("/:uuid", TheatersDelete)
 
