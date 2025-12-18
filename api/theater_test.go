@@ -5,12 +5,14 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/orgs/PRPO-skupina-02/Spored/xtesting"
+	"github.com/PRPO-skupina-02/common/database"
+	"github.com/PRPO-skupina-02/common/xtesting"
+	"github.com/orgs/PRPO-skupina-02/Spored/db"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestTheatersList(t *testing.T) {
-	db, fixtures := xtesting.PrepareTestDatabase(t)
+	db, fixtures := database.PrepareTestDatabase(t, db.FixtureFS, db.MigrationsFS)
 	r := TestingRouter(t, db)
 
 	tests := []struct {

@@ -7,9 +7,10 @@ import (
 	"os"
 
 	"github.com/PRPO-skupina-02/common/config"
+	"github.com/PRPO-skupina-02/common/database"
 	"github.com/gin-gonic/gin"
 	"github.com/orgs/PRPO-skupina-02/Spored/api"
-	"github.com/orgs/PRPO-skupina-02/Spored/database"
+	"github.com/orgs/PRPO-skupina-02/Spored/db"
 )
 
 func main() {
@@ -43,7 +44,7 @@ func run() error {
 	logger = slog.New(logHandler)
 	slog.SetDefault(logger)
 
-	db, err := database.OpenAndMigrate()
+	db, err := database.OpenAndMigrateProd(db.MigrationsFS)
 	if err != nil {
 		return err
 	}
