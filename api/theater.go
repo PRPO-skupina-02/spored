@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/PRPO-skupina-02/common/middleware"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/orgs/PRPO-skupina-02/Spored/models"
@@ -39,7 +40,7 @@ func newTheaterResponse(theater models.Theater) TheaterResponse {
 //	@Failure		500	{object}	HttpError
 //	@Router			/theaters [get]
 func TheatersList(c *gin.Context) {
-	tx := GetContextTransaction(c)
+	tx := middleware.GetContextTransaction(c)
 
 	theaters, err := models.GetTheaters(tx)
 	if err != nil {
@@ -75,7 +76,7 @@ type TheaterRequest struct {
 //	@Failure		500		{object}	HttpError
 //	@Router			/theaters [post]
 func TheatersCreate(c *gin.Context) {
-	tx := GetContextTransaction(c)
+	tx := middleware.GetContextTransaction(c)
 
 	var req TheaterRequest
 	err := c.ShouldBindJSON(&req)
@@ -114,7 +115,7 @@ func TheatersCreate(c *gin.Context) {
 //	@Failure		500		{object}	HttpError
 //	@Router			/theaters/{uuid} [put]
 func TheatersUpdate(c *gin.Context) {
-	tx := GetContextTransaction(c)
+	tx := middleware.GetContextTransaction(c)
 	uuidParam, ok := getUUIDParam(c)
 	if !ok {
 		return
@@ -159,7 +160,7 @@ func TheatersUpdate(c *gin.Context) {
 //	@Failure		500	{object}	HttpError
 //	@Router			/theaters/{uuid} [delete]
 func TheatersDelete(c *gin.Context) {
-	tx := GetContextTransaction(c)
+	tx := middleware.GetContextTransaction(c)
 	uuidParam, ok := getUUIDParam(c)
 	if !ok {
 		return

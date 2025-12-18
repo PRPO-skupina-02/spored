@@ -3,6 +3,7 @@ package api
 import (
 	"net/http"
 
+	"github.com/PRPO-skupina-02/common/middleware"
 	"github.com/gin-gonic/gin"
 	ut "github.com/go-playground/universal-translator"
 	_ "github.com/orgs/PRPO-skupina-02/Spored/api/docs"
@@ -27,9 +28,9 @@ func Register(router *gin.Engine, db *gorm.DB, trans ut.Translator) {
 
 	// REST API
 	v1 := router.Group("/api/v1")
-	v1.Use(TransactionMiddleware(db))
-	v1.Use(TranslationMiddleware(trans))
-	v1.Use(ErrorMiddleware)
+	v1.Use(middleware.TransactionMiddleware(db))
+	v1.Use(middleware.TranslationMiddleware(trans))
+	v1.Use(middleware.ErrorMiddleware)
 
 	// Theaters
 	theaters := v1.Group("/theaters")
