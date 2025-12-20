@@ -12,7 +12,7 @@ import (
 )
 
 type TheaterResponse struct {
-	UUID      uuid.UUID `json:"uuid"`
+	ID        uuid.UUID `json:"id"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 	Name      string    `json:"name"`
@@ -20,7 +20,7 @@ type TheaterResponse struct {
 
 func newTheaterResponse(theater models.Theater) TheaterResponse {
 	return TheaterResponse{
-		UUID:      theater.UUID,
+		ID:        theater.ID,
 		CreatedAt: theater.CreatedAt,
 		UpdatedAt: theater.UpdatedAt,
 		Name:      theater.Name,
@@ -87,7 +87,7 @@ func TheatersCreate(c *gin.Context) {
 	}
 
 	theater := models.Theater{
-		UUID: uuid.New(),
+		ID:   uuid.New(),
 		Name: req.Name,
 	}
 

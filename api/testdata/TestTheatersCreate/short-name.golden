@@ -1,0 +1,7 @@
+{
+  "code": 400,
+  "fields": {
+    "name": "name must be at least 3 characters in length"
+  },
+  "message": "validation error"
+}

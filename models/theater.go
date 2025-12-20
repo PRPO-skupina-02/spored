@@ -8,14 +8,15 @@ import (
 )
 
 type Theater struct {
-	UUID      uuid.UUID `gorm:"primaryKey"`
+	ID        uuid.UUID
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	Name      string
+
+	Name string
 }
 
-func (t *Theater) Create(tx *gorm.DB) error {
-	if err := tx.Create(t).Error; err != nil {
+func (r *Theater) Create(tx *gorm.DB) error {
+	if err := tx.Create(r).Error; err != nil {
 		return err
 	}
 	return nil
@@ -38,9 +39,9 @@ func GetTheaters(tx *gorm.DB) ([]Theater, error) {
 	return theaters, nil
 }
 
-func GetTheater(tx *gorm.DB, uuid uuid.UUID) (Theater, error) {
+func GetTheater(tx *gorm.DB, id uuid.UUID) (Theater, error) {
 	theater := Theater{
-		UUID: uuid,
+		ID: id,
 	}
 
 	if err := tx.Where(&theater).First(&theater).Error; err != nil {
@@ -50,9 +51,9 @@ func GetTheater(tx *gorm.DB, uuid uuid.UUID) (Theater, error) {
 	return theater, nil
 }
 
-func DeleteTheater(tx *gorm.DB, uuid uuid.UUID) error {
+func DeleteTheater(tx *gorm.DB, id uuid.UUID) error {
 	theater := Theater{
-		UUID: uuid,
+		ID: id,
 	}
 
 	if err := tx.Where(&theater).First(&theater).Error; err != nil {
