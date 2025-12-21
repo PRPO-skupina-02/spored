@@ -3,19 +3,21 @@ package models
 import (
 	"time"
 
+	"github.com/PRPO-skupina-02/common/request"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type Theater struct {
-	UUID      uuid.UUID `gorm:"primaryKey"`
+	ID        uuid.UUID
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	Name      string
+
+	Name string
 }
 
-func (t *Theater) Create(tx *gorm.DB) error {
-	if err := tx.Create(t).Error; err != nil {
+func (r *Theater) Create(tx *gorm.DB) error {
+	if err := tx.Create(r).Error; err != nil {
 		return err
 	}
 	return nil
@@ -28,19 +30,30 @@ func (t *Theater) Save(tx *gorm.DB) error {
 	return nil
 }
 
-func GetTheaters(tx *gorm.DB) ([]Theater, error) {
+func GetTheaters(tx *gorm.DB, offset, limit int, sort *request.SortOptions) ([]Theater, int, error) {
 	var theaters []Theater
 
-	if err := tx.Find(&theaters).Error; err != nil {
-		return nil, err
+	query := tx.Scopes(request.PaginateScope(offset, limit))
+
+	if sort != nil {
+		query = query.Scopes(request.SortScope(sort))
 	}
 
-	return theaters, nil
+	if err := query.Find(&theaters).Error; err != nil {
+		return nil, 0, err
+	}
+
+	var total int64
+	if err := query.Count(&total).Error; err != nil {
+		return nil, 0, err
+	}
+
+	return theaters, int(total), nil
 }
 
-func GetTheater(tx *gorm.DB, uuid uuid.UUID) (Theater, error) {
+func GetTheater(tx *gorm.DB, id uuid.UUID) (Theater, error) {
 	theater := Theater{
-		UUID: uuid,
+		ID: id,
 	}
 
 	if err := tx.Where(&theater).First(&theater).Error; err != nil {
@@ -50,9 +63,9 @@ func GetTheater(tx *gorm.DB, uuid uuid.UUID) (Theater, error) {
 	return theater, nil
 }
 
-func DeleteTheater(tx *gorm.DB, uuid uuid.UUID) error {
+func DeleteTheater(tx *gorm.DB, id uuid.UUID) error {
 	theater := Theater{
-		UUID: uuid,
+		ID: id,
 	}
 
 	if err := tx.Where(&theater).First(&theater).Error; err != nil {

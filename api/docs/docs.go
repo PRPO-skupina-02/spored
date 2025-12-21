@@ -29,6 +29,28 @@ const docTemplate = `{
                 ],
                 "summary": "List theaters",
                 "operationId": "TheatersList",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Limit the number of responses",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 0,
+                        "description": "Offset the first response",
+                        "name": "offset",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort results",
+                        "name": "sort",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -42,19 +64,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/api.HttpError"
+                            "$ref": "#/definitions/middleware.HttpError"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/api.HttpError"
+                            "$ref": "#/definitions/middleware.HttpError"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/api.HttpError"
+                            "$ref": "#/definitions/middleware.HttpError"
                         }
                     }
                 }
@@ -93,25 +115,75 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/api.HttpError"
+                            "$ref": "#/definitions/middleware.HttpError"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/api.HttpError"
+                            "$ref": "#/definitions/middleware.HttpError"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/api.HttpError"
+                            "$ref": "#/definitions/middleware.HttpError"
                         }
                     }
                 }
             }
         },
-        "/theaters/{uuid}": {
+        "/theaters/{id}": {
+            "get": {
+                "description": "Show theater",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "theaters"
+                ],
+                "summary": "Show theater",
+                "operationId": "TheatersShow",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Theater ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api.TheaterResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.HttpError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.HttpError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.HttpError"
+                        }
+                    }
+                }
+            },
             "put": {
                 "description": "Update theater",
                 "consumes": [
@@ -129,8 +201,8 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "format": "uuid",
-                        "description": "Theater UUID",
-                        "name": "uuid",
+                        "description": "Theater ID",
+                        "name": "id",
                         "in": "path",
                         "required": true
                     },
@@ -154,19 +226,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/api.HttpError"
+                            "$ref": "#/definitions/middleware.HttpError"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/api.HttpError"
+                            "$ref": "#/definitions/middleware.HttpError"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/api.HttpError"
+                            "$ref": "#/definitions/middleware.HttpError"
                         }
                     }
                 }
@@ -188,8 +260,8 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "format": "uuid",
-                        "description": "Theater UUID",
-                        "name": "uuid",
+                        "description": "Theater ID",
+                        "name": "id",
                         "in": "path",
                         "required": true
                     }
@@ -201,19 +273,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/api.HttpError"
+                            "$ref": "#/definitions/middleware.HttpError"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/api.HttpError"
+                            "$ref": "#/definitions/middleware.HttpError"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/api.HttpError"
+                            "$ref": "#/definitions/middleware.HttpError"
                         }
                     }
                 }
@@ -221,23 +293,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "api.HttpError": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer"
-                },
-                "fields": {
-                    "type": "object",
-                    "additionalProperties": {
-                        "type": "string"
-                    }
-                },
-                "message": {
-                    "type": "string"
-                }
-            }
-        },
         "api.TheaterRequest": {
             "type": "object",
             "required": [
@@ -256,13 +311,30 @@ const docTemplate = `{
                 "created_at": {
                     "type": "string"
                 },
+                "id": {
+                    "type": "string"
+                },
                 "name": {
                     "type": "string"
                 },
                 "updated_at": {
                     "type": "string"
+                }
+            }
+        },
+        "middleware.HttpError": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
                 },
-                "uuid": {
+                "fields": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "message": {
                     "type": "string"
                 }
             }

@@ -1,3 +1,6 @@
 docs:
 	swag fmt
-	swag init -g api/api.go -o api/docs
+	swag init --parseDependency -g api/api.go -o api/docs
+
+test:
+	godotenv go test ./...

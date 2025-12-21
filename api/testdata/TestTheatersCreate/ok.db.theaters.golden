@@ -1,0 +1,26 @@
+[
+	{
+		"ID": "-- Dynamic value --",
+		"CreatedAt": "-- Dynamic value --",
+		"UpdatedAt": "-- Dynamic value --",
+		"Name": "TestTheater"
+	},
+	{
+		"ID": "-- Dynamic value --",
+		"CreatedAt": "-- Dynamic value --",
+		"UpdatedAt": "-- Dynamic value --",
+		"Name": "Theater1"
+	},
+	{
+		"ID": "-- Dynamic value --",
+		"CreatedAt": "-- Dynamic value --",
+		"UpdatedAt": "-- Dynamic value --",
+		"Name": "Theater2"
+	},
+	{
+		"ID": "-- Dynamic value --",
+		"CreatedAt": "-- Dynamic value --",
+		"UpdatedAt": "-- Dynamic value --",
+		"Name": "Theater3"
+	}
+]
