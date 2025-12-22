@@ -135,13 +135,14 @@ func RoomsCreate(c *gin.Context) {
 //	@Router			/theaters/{theaterID}/rooms/{roomID} [get]
 func RoomsShow(c *gin.Context) {
 	tx := middleware.GetContextTransaction(c)
+	theater := GetContextTheater(c)
 	id, err := request.GetUUIDParam(c, "roomID")
 	if err != nil {
 		_ = c.Error(err)
 		return
 	}
 
-	room, err := models.GetRoom(tx, id)
+	room, err := models.GetRoom(tx, theater.ID, id)
 	if err != nil {
 		_ = c.Error(err)
 		return
@@ -168,6 +169,7 @@ func RoomsShow(c *gin.Context) {
 //	@Router			/theaters/{theaterID}/rooms/{roomID} [put]
 func RoomsUpdate(c *gin.Context) {
 	tx := middleware.GetContextTransaction(c)
+	theater := GetContextTheater(c)
 	id, err := request.GetUUIDParam(c, "roomID")
 	if err != nil {
 		_ = c.Error(err)
@@ -181,7 +183,7 @@ func RoomsUpdate(c *gin.Context) {
 		return
 	}
 
-	room, err := models.GetRoom(tx, id)
+	room, err := models.GetRoom(tx, theater.ID, id)
 	if err != nil {
 		_ = c.Error(err)
 		return

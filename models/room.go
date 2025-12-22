@@ -51,9 +51,10 @@ func GetTheaterRooms(tx *gorm.DB, theaterID uuid.UUID, offset, limit int, sort *
 	return rooms, int(total), nil
 }
 
-func GetRoom(tx *gorm.DB, id uuid.UUID) (Room, error) {
+func GetRoom(tx *gorm.DB, theaterID, roomID uuid.UUID) (Room, error) {
 	room := Room{
-		ID: id,
+		ID:        roomID,
+		TheaterID: theaterID,
 	}
 
 	if err := tx.Where(&room).First(&room).Error; err != nil {
