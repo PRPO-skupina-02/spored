@@ -120,19 +120,7 @@ func TheatersCreate(c *gin.Context) {
 //	@Failure		500			{object}	middleware.HttpError
 //	@Router			/theaters/{theaterID} [get]
 func TheatersShow(c *gin.Context) {
-	tx := middleware.GetContextTransaction(c)
-	id, err := request.GetUUIDParam(c, "theaterID")
-	if err != nil {
-		_ = c.Error(err)
-		return
-	}
-
-	theater, err := models.GetTheater(tx, id)
-	if err != nil {
-		_ = c.Error(err)
-		return
-	}
-
+	theater := GetContextTheater(c)
 	c.JSON(http.StatusOK, newTheaterResponse(theater))
 }
 
@@ -153,20 +141,10 @@ func TheatersShow(c *gin.Context) {
 //	@Router			/theaters/{theaterID} [put]
 func TheatersUpdate(c *gin.Context) {
 	tx := middleware.GetContextTransaction(c)
-	id, err := request.GetUUIDParam(c, "theaterID")
-	if err != nil {
-		_ = c.Error(err)
-		return
-	}
+	theater := GetContextTheater(c)
 
 	var req TheaterRequest
-	err = c.ShouldBindJSON(&req)
-	if err != nil {
-		_ = c.Error(err)
-		return
-	}
-
-	theater, err := models.GetTheater(tx, id)
+	err := c.ShouldBindJSON(&req)
 	if err != nil {
 		_ = c.Error(err)
 		return
@@ -199,13 +177,9 @@ func TheatersUpdate(c *gin.Context) {
 //	@Router			/theaters/{theaterID} [delete]
 func TheatersDelete(c *gin.Context) {
 	tx := middleware.GetContextTransaction(c)
-	id, err := request.GetUUIDParam(c, "theaterID")
-	if err != nil {
-		_ = c.Error(err)
-		return
-	}
+	theater := GetContextTheater(c)
 
-	err = models.DeleteTheater(tx, id)
+	err := models.DeleteTheater(tx, theater.ID)
 	if err != nil {
 		_ = c.Error(err)
 		return

@@ -33,23 +33,25 @@ func Register(router *gin.Engine, db *gorm.DB, trans ut.Translator) {
 	v1.Use(middleware.ErrorMiddleware)
 
 	// Theaters
-	theaters := v1.Group("/theaters")
+	theaters := v1.Group("/theaters/:theaterID")
+	theaters.Use(TheaterContextMiddleware)
+
 	theatersRestricted := theaters.Group("")
 	theatersRestricted.Use(TheaterPermissionsMiddleware)
 
-	theaters.GET("", TheatersList)
-	theaters.GET("/:theaterID", TheatersShow)
-	theaters.POST("", TheatersCreate)
+	v1.GET("/theaters", TheatersList)
+	theaters.GET("", TheatersShow)
+	v1.POST("/theaters", TheatersCreate)
 
-	theatersRestricted.PUT("/:theaterID", TheatersUpdate)
-	theatersRestricted.DELETE("/:theaterID", TheatersDelete)
+	theatersRestricted.PUT("", TheatersUpdate)
+	theatersRestricted.DELETE("", TheatersDelete)
 
 	// Rooms
-	theaters.GET("/:theaterID/rooms", RoomsList)
-	theaters.GET("/:theaterID/rooms/:roomID", RoomsShow)
-	theatersRestricted.POST("/:theaterID/rooms", RoomsCreate)
-	theatersRestricted.PUT("/:theaterID/rooms/:roomID", RoomsUpdate)
-	theatersRestricted.DELETE("/:theaterID/rooms/:roomID", RoomsDelete)
+	theaters.GET("/rooms", RoomsList)
+	theaters.GET("/rooms/:roomID", RoomsShow)
+	theatersRestricted.POST("/rooms", RoomsCreate)
+	theatersRestricted.PUT("/rooms/:roomID", RoomsUpdate)
+	theatersRestricted.DELETE("/rooms/:roomID", RoomsDelete)
 
 }
 

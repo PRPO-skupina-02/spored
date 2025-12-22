@@ -28,7 +28,7 @@ func GetContextTheater(c *gin.Context) models.Theater {
 	return tx.(models.Theater)
 }
 
-func TheaterPermissionsMiddleware(c *gin.Context) {
+func TheaterContextMiddleware(c *gin.Context) {
 	tx := middleware.GetContextTransaction(c)
 	id, err := request.GetUUIDParam(c, "theaterID")
 	if err != nil {
@@ -44,5 +44,9 @@ func TheaterPermissionsMiddleware(c *gin.Context) {
 
 	SetContextTheater(c, theater)
 
+	c.Next()
+}
+
+func TheaterPermissionsMiddleware(c *gin.Context) {
 	c.Next()
 }

@@ -50,15 +50,11 @@ func newRoomResponse(room models.Room) RoomResponse {
 //	@Router			/theaters/{theaterID}/rooms [get]
 func RoomsList(c *gin.Context) {
 	tx := middleware.GetContextTransaction(c)
+	theater := GetContextTheater(c)
 	offset, limit := request.GetNormalizedPaginationArgs(c)
 	sort := request.GetSortOptions(c)
-	roomID, err := request.GetUUIDParam(c, "theaterID")
-	if err != nil {
-		_ = c.Error(err)
-		return
-	}
 
-	rooms, total, err := models.GetTheaterRooms(tx, roomID, offset, limit, sort)
+	rooms, total, err := models.GetTheaterRooms(tx, theater.ID, offset, limit, sort)
 	if err != nil {
 		_ = c.Error(err)
 		return
@@ -96,6 +92,7 @@ type RoomRequest struct {
 //	@Router			/theaters/{theaterID}/rooms [post]
 func RoomsCreate(c *gin.Context) {
 	tx := middleware.GetContextTransaction(c)
+	theater := GetContextTheater(c)
 
 	var req RoomRequest
 	err := c.ShouldBindJSON(&req)
@@ -105,11 +102,11 @@ func RoomsCreate(c *gin.Context) {
 	}
 
 	room := models.Room{
-		// TODO: TheaterID
-		ID:      uuid.New(),
-		Name:    req.Name,
-		Rows:    req.Rows,
-		Columns: req.Columns,
+		ID:        uuid.New(),
+		TheaterID: theater.ID,
+		Name:      req.Name,
+		Rows:      req.Rows,
+		Columns:   req.Columns,
 	}
 
 	err = room.Create(tx)
