@@ -1,0 +1,8 @@
+{
+	"id": "-- Dynamic value --",
+	"created_at": "-- Dynamic value --",
+	"updated_at": "-- Dynamic value --",
+	"name": "TestRoom",
+	"rows": 10,
+	"columns": 20
+}

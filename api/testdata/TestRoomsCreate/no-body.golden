@@ -1,0 +1,9 @@
+{
+	"code": 400,
+	"message": "validation error",
+	"fields": {
+		"columns": "columns is a required field",
+		"name": "name is a required field",
+		"rows": "rows is a required field"
+	}
+}

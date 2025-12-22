@@ -1,0 +1,9 @@
+{
+	"code": 400,
+	"message": "validation error",
+	"fields": {
+		"columns": "columns must be 100 or less",
+		"name": "name must be at least 3 characters in length",
+		"rows": "rows must be 1 or greater"
+	}
+}

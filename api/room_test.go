@@ -5,10 +5,12 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	"github.com/PRPO-skupina-02/common/database"
 	"github.com/PRPO-skupina-02/common/xtesting"
 	"github.com/orgs/PRPO-skupina-02/Spored/db"
+	"github.com/orgs/PRPO-skupina-02/Spored/models"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -50,6 +52,21 @@ func TestRoomsList(t *testing.T) {
 			status:    http.StatusOK,
 			theaterID: "ea0b7f96-ddc9-11f0-9635-23efd36396bd",
 		},
+		{
+			name:      "invalid-theater-id",
+			status:    http.StatusNotFound,
+			theaterID: "01234567-0123-0123-0123-0123456789ab",
+		},
+		{
+			name:      "nil-theater-id",
+			status:    http.StatusBadRequest,
+			theaterID: "00000000-0000-0000-0000-000000000000",
+		},
+		{
+			name:      "malformed-theater-id",
+			status:    http.StatusBadRequest,
+			theaterID: "000",
+		},
 	}
 
 	for _, testCase := range tests {
@@ -66,6 +83,101 @@ func TestRoomsList(t *testing.T) {
 
 			assert.Equal(t, testCase.status, w.Code)
 			xtesting.AssertGoldenJSON(t, w)
+		})
+	}
+}
+
+func TestRoomsCreate(t *testing.T) {
+	db, fixtures := database.PrepareTestDatabase(t, db.FixtureFS, db.MigrationsFS)
+	r := TestingRouter(t, db)
+
+	tests := []struct {
+		name      string
+		body      RoomRequest
+		status    int
+		theaterID string
+	}{
+		{
+			name: "ok",
+			body: RoomRequest{
+				Name:    "TestRoom",
+				Rows:    10,
+				Columns: 20,
+			},
+			status:    http.StatusCreated,
+			theaterID: "fb126c8c-d059-11f0-8fa4-b35f33be83b7",
+		},
+		{
+			name: "validation-errors",
+			body: RoomRequest{
+				Name:    "A",
+				Rows:    -1,
+				Columns: 1000,
+			},
+			status:    http.StatusBadRequest,
+			theaterID: "fb126c8c-d059-11f0-8fa4-b35f33be83b7",
+		},
+		{
+			name:      "no-body",
+			status:    http.StatusBadRequest,
+			theaterID: "fb126c8c-d059-11f0-8fa4-b35f33be83b7",
+		},
+		{
+			name: "invalid-theater-id",
+			body: RoomRequest{
+				Name:    "TestRoom",
+				Rows:    10,
+				Columns: 20,
+			},
+			status:    http.StatusNotFound,
+			theaterID: "01234567-0123-0123-0123-0123456789ab",
+		},
+		{
+			name: "nil-theater-id",
+			body: RoomRequest{
+				Name:    "TestRoom",
+				Rows:    10,
+				Columns: 20,
+			},
+			status:    http.StatusBadRequest,
+			theaterID: "00000000-0000-0000-0000-000000000000",
+		},
+		{
+			name: "malformed-theater-id",
+			body: RoomRequest{
+				Name:    "TestRoom",
+				Rows:    10,
+				Columns: 20,
+			},
+			status:    http.StatusBadRequest,
+			theaterID: "000",
+		},
+	}
+
+	for _, testCase := range tests {
+		t.Run(testCase.name, func(t *testing.T) {
+			err := fixtures.Load()
+			assert.NoError(t, err)
+
+			targetURL := fmt.Sprintf("/api/v1/theaters/%s/rooms", testCase.theaterID)
+
+			req := xtesting.NewTestingRequest(t, targetURL, http.MethodPost, testCase.body)
+			assert.NoError(t, err)
+			w := httptest.NewRecorder()
+
+			r.ServeHTTP(w, req)
+
+			ignoreResp := xtesting.ValuesCheckers{
+				"id":         xtesting.ValueUUID(),
+				"created_at": xtesting.ValueTimeInPastDuration(time.Second),
+				"updated_at": xtesting.ValueTimeInPastDuration(time.Second),
+			}
+
+			ignoreTheaters := xtesting.GenerateValueCheckersForArrays(map[string]xtesting.ValueChecker{"ID": xtesting.ValueUUID(), "CreatedAt": xtesting.ValueTime(), "UpdatedAt": xtesting.ValueTime()}, 10)
+
+			assert.Equal(t, testCase.status, w.Code)
+			xtesting.AssertGoldenJSON(t, w, ignoreResp)
+			xtesting.AssertGoldenDatabaseTable(t, db.Order("name"), []models.Theater{}, ignoreTheaters)
 		})
 	}
 }
