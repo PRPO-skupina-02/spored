@@ -20,6 +20,8 @@ jobs:
         run: go mod download
       - name: Install CLI tools
         run: make install-cli-tools
+      - name: Prepare env
+        run: cp .env.example .env
       - name: Start containers
         run: docker compose up -d
       - name: Test
