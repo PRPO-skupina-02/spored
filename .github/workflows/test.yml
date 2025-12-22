@@ -18,6 +18,8 @@ jobs:
           go-version-file: "go.mod"
       - name: Download dependencies
         run: go mod download
+      - name: Install CLI tools
+        run: make install-cli-tools
       - name: Start containers
         run: docker compose up -d
       - name: Test

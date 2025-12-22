@@ -4,7 +4,7 @@ go 1.25.1
 
 require github.com/stretchr/testify v1.11.1
 
-require github.com/PRPO-skupina-02/common v0.2.1
+require github.com/PRPO-skupina-02/common v0.2.2
 
 require (
 	dario.cat/mergo v1.0.1 // indirect
