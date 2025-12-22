@@ -64,9 +64,10 @@ func GetRoom(tx *gorm.DB, theaterID, roomID uuid.UUID) (Room, error) {
 	return room, nil
 }
 
-func DeleteRoom(tx *gorm.DB, id uuid.UUID) error {
+func DeleteRoom(tx *gorm.DB, theaterID, id uuid.UUID) error {
 	room := Room{
-		ID: id,
+		ID:        id,
+		TheaterID: theaterID,
 	}
 
 	if err := tx.Where(&room).First(&room).Error; err != nil {

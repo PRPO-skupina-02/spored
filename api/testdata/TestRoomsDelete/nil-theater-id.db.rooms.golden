@@ -1,0 +1,38 @@
+[
+	{
+		"ID": "925c2358-df46-11f0-a38e-abe580bde3d1",
+		"CreatedAt": "2025-11-30T23:59:59+01:00",
+		"UpdatedAt": "2025-11-30T23:59:59+01:00",
+		"Name": "Theater1 Room1",
+		"Rows": 10,
+		"Columns": 8,
+		"TheaterID": "bae209f6-d059-11f0-b2a4-cbf992c2eb6d"
+	},
+	{
+		"ID": "e0722c3a-df42-11f0-9579-3734395be62a",
+		"CreatedAt": "2025-11-30T23:59:59+01:00",
+		"UpdatedAt": "2025-11-30T23:59:59+01:00",
+		"Name": "Theater1 Room2",
+		"Rows": 20,
+		"Columns": 30,
+		"TheaterID": "bae209f6-d059-11f0-b2a4-cbf992c2eb6d"
+	},
+	{
+		"ID": "e0a55f7e-df42-11f0-b791-874135af3470",
+		"CreatedAt": "2025-11-30T23:59:59+01:00",
+		"UpdatedAt": "2025-11-30T23:59:59+01:00",
+		"Name": "Theater1 Room3",
+		"Rows": 3,
+		"Columns": 5,
+		"TheaterID": "bae209f6-d059-11f0-b2a4-cbf992c2eb6d"
+	},
+	{
+		"ID": "ec19b8aa-df42-11f0-9018-53ba2f5e5e7c",
+		"CreatedAt": "2025-11-30T23:59:59+01:00",
+		"UpdatedAt": "2025-11-30T23:59:59+01:00",
+		"Name": "Theater2 Room1",
+		"Rows": 20,
+		"Columns": 10,
+		"TheaterID": "fb126c8c-d059-11f0-8fa4-b35f33be83b7"
+	}
+]

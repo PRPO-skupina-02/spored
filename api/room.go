@@ -219,13 +219,14 @@ func RoomsUpdate(c *gin.Context) {
 //	@Router			/theaters/{theaterID}/rooms/{roomID} [delete]
 func RoomsDelete(c *gin.Context) {
 	tx := middleware.GetContextTransaction(c)
+	theater := GetContextTheater(c)
 	id, err := request.GetUUIDParam(c, "roomID")
 	if err != nil {
 		_ = c.Error(err)
 		return
 	}
 
-	err = models.DeleteRoom(tx, id)
+	err = models.DeleteRoom(tx, theater.ID, id)
 	if err != nil {
 		_ = c.Error(err)
 		return
