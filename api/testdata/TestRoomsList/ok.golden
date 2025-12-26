@@ -6,7 +6,10 @@
 			"updated_at": "2025-11-30T23:59:59Z",
 			"name": "Theater2 Room1",
 			"rows": 20,
-			"columns": 10
+			"columns": 10,
+			"operating_mode": "ALL",
+			"opening_hour": 18,
+			"closing_hour": 24
 		}
 	],
 	"offset": 10,

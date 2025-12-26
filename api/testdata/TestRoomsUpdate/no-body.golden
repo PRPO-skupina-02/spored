@@ -2,8 +2,11 @@
 	"code": 400,
 	"message": "validation error",
 	"fields": {
+		"closing_hour": "closing_hour is a required field",
 		"columns": "columns is a required field",
 		"name": "name is a required field",
+		"opening_hour": "opening_hour is a required field",
+		"operating_mode": "operating_mode is a required field",
 		"rows": "rows is a required field"
 	}
 }

@@ -4,5 +4,8 @@
 	"updated_at": "-- Dynamic value --",
 	"name": "TestRoom",
 	"rows": 10,
-	"columns": 20
+	"columns": 20,
+	"operating_mode": "ALL",
+	"opening_hour": 9,
+	"closing_hour": 11
 }

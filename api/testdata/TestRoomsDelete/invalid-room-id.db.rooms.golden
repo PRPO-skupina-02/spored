@@ -6,6 +6,9 @@
 		"Name": "Theater1 Room1",
 		"Rows": 10,
 		"Columns": 8,
+		"OperatingMode": "WEEKDAYS",
+		"OpeningHour": 12,
+		"ClosingHour": 24,
 		"TheaterID": "bae209f6-d059-11f0-b2a4-cbf992c2eb6d"
 	},
 	{
@@ -15,6 +18,9 @@
 		"Name": "Theater1 Room2",
 		"Rows": 20,
 		"Columns": 30,
+		"OperatingMode": "WEEKENDS",
+		"OpeningHour": 8,
+		"ClosingHour": 22,
 		"TheaterID": "bae209f6-d059-11f0-b2a4-cbf992c2eb6d"
 	},
 	{
@@ -24,6 +30,9 @@
 		"Name": "Theater1 Room3",
 		"Rows": 3,
 		"Columns": 5,
+		"OperatingMode": "CLOSED",
+		"OpeningHour": 8,
+		"ClosingHour": 16,
 		"TheaterID": "bae209f6-d059-11f0-b2a4-cbf992c2eb6d"
 	},
 	{
@@ -33,6 +42,9 @@
 		"Name": "Theater2 Room1",
 		"Rows": 20,
 		"Columns": 10,
+		"OperatingMode": "ALL",
+		"OpeningHour": 18,
+		"ClosingHour": 24,
 		"TheaterID": "fb126c8c-d059-11f0-8fa4-b35f33be83b7"
 	}
 ]

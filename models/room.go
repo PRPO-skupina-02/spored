@@ -8,6 +8,15 @@ import (
 	"gorm.io/gorm"
 )
 
+type RoomOperatingMode string
+
+const (
+	Closed   RoomOperatingMode = "CLOSED"
+	Weekdays RoomOperatingMode = "WEEKDAYS"
+	Weekends RoomOperatingMode = "WEEKENDS"
+	All      RoomOperatingMode = "ALL"
+)
+
 type Room struct {
 	ID        uuid.UUID `gorm:"primaryKey"`
 	CreatedAt time.Time
@@ -16,6 +25,10 @@ type Room struct {
 	Name    string
 	Rows    int
 	Columns int
+
+	OperatingMode RoomOperatingMode
+	OpeningHour   int
+	ClosingHour   int
 
 	TheaterID uuid.UUID
 	Theater   Theater `gorm:"foreignKey:TheaterID" json:"-"`

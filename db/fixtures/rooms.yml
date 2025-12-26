@@ -5,6 +5,9 @@
   name: "Theater1 Room1"
   rows: 10
   columns: 8
+  operating_mode: "WEEKDAYS"
+  opening_hour: 12
+  closing_hour: 24
 
 - id: e0722c3a-df42-11f0-9579-3734395be62a
   created_at: 2025-11-30 23:59:59
@@ -13,6 +16,9 @@
   name: "Theater1 Room2"
   rows: 20
   columns: 30
+  operating_mode: "WEEKENDS"
+  opening_hour: 8
+  closing_hour: 22
 
 - id: e0a55f7e-df42-11f0-b791-874135af3470
   created_at: 2025-11-30 23:59:59
@@ -21,6 +27,9 @@
   name: "Theater1 Room3"
   rows: 3
   columns: 5
+  operating_mode: "CLOSED"
+  opening_hour: 8
+  closing_hour: 16
 
 - id: ec19b8aa-df42-11f0-9018-53ba2f5e5e7c
   created_at: 2025-11-30 23:59:59
@@ -29,3 +38,6 @@
   name: "Theater2 Room1"
   rows: 20
   columns: 10
+  operating_mode: "ALL"
+  opening_hour: 18
+  closing_hour: 24

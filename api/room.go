@@ -12,22 +12,28 @@ import (
 )
 
 type RoomResponse struct {
-	ID        uuid.UUID `json:"id"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-	Name      string    `json:"name"`
-	Rows      int       `json:"rows"`
-	Columns   int       `json:"columns"`
+	ID            uuid.UUID                `json:"id"`
+	CreatedAt     time.Time                `json:"created_at"`
+	UpdatedAt     time.Time                `json:"updated_at"`
+	Name          string                   `json:"name"`
+	Rows          int                      `json:"rows"`
+	Columns       int                      `json:"columns"`
+	OperatingMode models.RoomOperatingMode `json:"operating_mode"`
+	OpeningHour   int                      `json:"opening_hour"`
+	ClosingHour   int                      `json:"closing_hour"`
 }
 
 func newRoomResponse(room models.Room) RoomResponse {
 	return RoomResponse{
-		ID:        room.ID,
-		CreatedAt: room.CreatedAt,
-		UpdatedAt: room.UpdatedAt,
-		Name:      room.Name,
-		Rows:      room.Rows,
-		Columns:   room.Columns,
+		ID:            room.ID,
+		CreatedAt:     room.CreatedAt,
+		UpdatedAt:     room.UpdatedAt,
+		Name:          room.Name,
+		Rows:          room.Rows,
+		Columns:       room.Columns,
+		OperatingMode: room.OperatingMode,
+		OpeningHour:   room.OpeningHour,
+		ClosingHour:   room.ClosingHour,
 	}
 }
 
@@ -70,9 +76,12 @@ func RoomsList(c *gin.Context) {
 }
 
 type RoomRequest struct {
-	Name    string `json:"name" binding:"required,min=3"`
-	Rows    int    `json:"rows" binding:"required,min=1,max=100"`
-	Columns int    `json:"columns" binding:"required,min=1,max=100"`
+	Name          string                   `json:"name" binding:"required,min=3"`
+	Rows          int                      `json:"rows" binding:"required,min=1,max=100"`
+	Columns       int                      `json:"columns" binding:"required,min=1,max=100"`
+	OperatingMode models.RoomOperatingMode `json:"operating_mode" binding:"required,oneof=CLOSED WEEKDAYS WEEKENDS ALL"`
+	OpeningHour   int                      `json:"opening_hour" binding:"required,min=0,max=24"`
+	ClosingHour   int                      `json:"closing_hour" binding:"required,min=0,max=24"`
 }
 
 // RoomsCreate
@@ -102,11 +111,14 @@ func RoomsCreate(c *gin.Context) {
 	}
 
 	room := models.Room{
-		ID:        uuid.New(),
-		TheaterID: theater.ID,
-		Name:      req.Name,
-		Rows:      req.Rows,
-		Columns:   req.Columns,
+		ID:            uuid.New(),
+		TheaterID:     theater.ID,
+		Name:          req.Name,
+		Rows:          req.Rows,
+		Columns:       req.Columns,
+		OperatingMode: req.OperatingMode,
+		OpeningHour:   req.OpeningHour,
+		ClosingHour:   req.ClosingHour,
 	}
 
 	err = room.Create(tx)
@@ -192,6 +204,9 @@ func RoomsUpdate(c *gin.Context) {
 	room.Name = req.Name
 	room.Rows = req.Rows
 	room.Columns = req.Columns
+	room.OperatingMode = req.OperatingMode
+	room.OpeningHour = req.OpeningHour
+	room.ClosingHour = req.ClosingHour
 
 	err = room.Save(tx)
 	if err != nil {

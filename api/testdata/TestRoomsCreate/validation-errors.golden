@@ -2,8 +2,11 @@
 	"code": 400,
 	"message": "validation error",
 	"fields": {
+		"closing_hour": "closing_hour must be 24 or less",
 		"columns": "columns must be 100 or less",
 		"name": "name must be at least 3 characters in length",
+		"opening_hour": "opening_hour must be 0 or greater",
+		"operating_mode": "operating_mode must be one of [CLOSED WEEKDAYS WEEKENDS ALL]",
 		"rows": "rows must be 1 or greater"
 	}
 }

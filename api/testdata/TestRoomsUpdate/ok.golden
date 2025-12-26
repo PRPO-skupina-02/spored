@@ -4,5 +4,8 @@
 	"updated_at": "-- Dynamic value --",
 	"name": "UpdatedRoom",
 	"rows": 12,
-	"columns": 24
+	"columns": 24,
+	"operating_mode": "ALL",
+	"opening_hour": 9,
+	"closing_hour": 11
 }
