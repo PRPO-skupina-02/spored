@@ -130,10 +130,10 @@ func MoviesCreate(c *gin.Context) {
 //	@Accept			json
 //	@Produce		json
 //	@Param			movieID	path		string	true	"Movie ID"	Format(uuid)
-//	@Success		200			{object}	MovieResponse
-//	@Failure		400			{object}	middleware.HttpError
-//	@Failure		404			{object}	middleware.HttpError
-//	@Failure		500			{object}	middleware.HttpError
+//	@Success		200		{object}	MovieResponse
+//	@Failure		400		{object}	middleware.HttpError
+//	@Failure		404		{object}	middleware.HttpError
+//	@Failure		500		{object}	middleware.HttpError
 //	@Router			/movies/{movieID} [get]
 func MoviesShow(c *gin.Context) {
 	movie := GetContextMovie(c)
@@ -149,11 +149,11 @@ func MoviesShow(c *gin.Context) {
 //	@Accept			json
 //	@Produce		json
 //	@Param			movieID	path		string			true	"Movie ID"	Format(uuid)
-//	@Param			request		body		MovieRequest	true	"request body"
-//	@Success		200			{object}	MovieResponse
-//	@Failure		400			{object}	middleware.HttpError
-//	@Failure		404			{object}	middleware.HttpError
-//	@Failure		500			{object}	middleware.HttpError
+//	@Param			request	body		MovieRequest	true	"request body"
+//	@Success		200		{object}	MovieResponse
+//	@Failure		400		{object}	middleware.HttpError
+//	@Failure		404		{object}	middleware.HttpError
+//	@Failure		500		{object}	middleware.HttpError
 //	@Router			/movies/{movieID} [put]
 func MoviesUpdate(c *gin.Context) {
 	tx := middleware.GetContextTransaction(c)

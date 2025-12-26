@@ -1,7 +1,55 @@
 basePath: /api/v1
 definitions:
+  api.MovieRequest:
+    properties:
+      description:
+        minLength: 10
+        type: string
+      image_url:
+        type: string
+      length_minutes:
+        maximum: 1000
+        minimum: 10
+        type: integer
+      rating:
+        maximum: 10
+        minimum: 0
+        type: number
+      title:
+        minLength: 3
+        type: string
+    required:
+    - description
+    - image_url
+    - length_minutes
+    - rating
+    - title
+    type: object
+  api.MovieResponse:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      image_url:
+        type: string
+      length_minutes:
+        type: integer
+      name:
+        type: string
+      rating:
+        type: number
+      updated_at:
+        type: string
+    type: object
   api.RoomRequest:
     properties:
+      closing_hour:
+        maximum: 24
+        minimum: 0
+        type: integer
       columns:
         maximum: 100
         minimum: 1
@@ -9,17 +57,34 @@ definitions:
       name:
         minLength: 3
         type: string
+      opening_hour:
+        maximum: 24
+        minimum: 0
+        type: integer
+      operating_mode:
+        allOf:
+        - $ref: '#/definitions/models.RoomOperatingMode'
+        enum:
+        - CLOSED
+        - WEEKDAYS
+        - WEEKENDS
+        - ALL
       rows:
         maximum: 100
         minimum: 1
         type: integer
     required:
+    - closing_hour
     - columns
     - name
+    - opening_hour
+    - operating_mode
     - rows
     type: object
   api.RoomResponse:
     properties:
+      closing_hour:
+        type: integer
       columns:
         type: integer
       created_at:
@@ -28,6 +93,10 @@ definitions:
         type: string
       name:
         type: string
+      opening_hour:
+        type: integer
+      operating_mode:
+        $ref: '#/definitions/models.RoomOperatingMode'
       rows:
         type: integer
       updated_at:
@@ -63,6 +132,18 @@ definitions:
       message:
         type: string
     type: object
+  models.RoomOperatingMode:
+    enum:
+    - CLOSED
+    - WEEKDAYS
+    - WEEKENDS
+    - ALL
+    type: string
+    x-enum-varnames:
+    - Closed
+    - Weekdays
+    - Weekends
+    - All
 host: localhost:8080
 info:
   contact: {}
@@ -70,6 +151,192 @@ info:
   title: Spored API
   version: "1.0"
 paths:
+  /movies:
+    get:
+      consumes:
+      - application/json
+      description: List movies
+      operationId: MoviesList
+      parameters:
+      - default: 10
+        description: Limit the number of responses
+        in: query
+        name: limit
+        type: integer
+      - default: 0
+        description: Offset the first response
+        in: query
+        name: offset
+        type: integer
+      - description: Sort results
+        in: query
+        name: sort
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/api.MovieResponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/middleware.HttpError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/middleware.HttpError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/middleware.HttpError'
+      summary: List movies
+      tags:
+      - movies
+    post:
+      consumes:
+      - application/json
+      description: Create movie
+      operationId: MoviesCreate
+      parameters:
+      - description: request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.MovieRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.MovieResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/middleware.HttpError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/middleware.HttpError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/middleware.HttpError'
+      summary: Create movie
+      tags:
+      - movies
+  /movies/{movieID}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete movie
+      operationId: MoviesDelete
+      parameters:
+      - description: Movie ID
+        format: uuid
+        in: path
+        name: movieID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/middleware.HttpError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/middleware.HttpError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/middleware.HttpError'
+      summary: Delete movie
+      tags:
+      - movies
+    get:
+      consumes:
+      - application/json
+      description: Show movie
+      operationId: MoviesShow
+      parameters:
+      - description: Movie ID
+        format: uuid
+        in: path
+        name: movieID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.MovieResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/middleware.HttpError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/middleware.HttpError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/middleware.HttpError'
+      summary: Show movie
+      tags:
+      - movies
+    put:
+      consumes:
+      - application/json
+      description: Update movie
+      operationId: MoviesUpdate
+      parameters:
+      - description: Movie ID
+        format: uuid
+        in: path
+        name: movieID
+        required: true
+        type: string
+      - description: request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.MovieRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.MovieResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/middleware.HttpError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/middleware.HttpError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/middleware.HttpError'
+      summary: Update movie
+      tags:
+      - movies
   /theaters:
     get:
       consumes:

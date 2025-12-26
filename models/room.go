@@ -18,7 +18,7 @@ const (
 )
 
 type Room struct {
-	ID        uuid.UUID `gorm:"primaryKey"`
+	ID        uuid.UUID
 	CreatedAt time.Time
 	UpdatedAt time.Time
 
@@ -31,18 +31,19 @@ type Room struct {
 	ClosingHour   int
 
 	TheaterID uuid.UUID
-	Theater   Theater `gorm:"foreignKey:TheaterID" json:"-"`
+	Theater   Theater    `gorm:"foreignKey:TheaterID" json:"-"`
+	TimeSlots []TimeSlot `gorm:"foreignKey:RoomID" json:"-"`
 }
 
-func (r *Room) Create(tx *gorm.DB) error {
-	if err := tx.Create(r).Error; err != nil {
+func (ts *Room) Create(tx *gorm.DB) error {
+	if err := tx.Create(ts).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
-func (r *Room) Save(tx *gorm.DB) error {
-	if err := tx.Save(r).Error; err != nil {
+func (ts *Room) Save(tx *gorm.DB) error {
+	if err := tx.Save(ts).Error; err != nil {
 		return err
 	}
 	return nil
@@ -84,8 +85,15 @@ func DeleteRoom(tx *gorm.DB, theaterID, id uuid.UUID) error {
 		TheaterID: theaterID,
 	}
 
-	if err := tx.Where(&room).First(&room).Error; err != nil {
+	if err := tx.Where(&room).Preload("TimeSlots").First(&room).Error; err != nil {
 		return err
+	}
+
+	for _, timeslot := range room.TimeSlots {
+		err := DeleteTimeSlot(tx, id, timeslot.ID)
+		if err != nil {
+			return err
+		}
 	}
 
 	if err := tx.Delete(&room).Error; err != nil {
