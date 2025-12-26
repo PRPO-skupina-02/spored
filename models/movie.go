@@ -14,10 +14,11 @@ type Movie struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 
-	Title       string
-	Description string
-	ImageURL    string
-	Rating      float64
+	Title         string
+	Description   string
+	ImageURL      string
+	Rating        float64
+	LengthMinutes int
 }
 
 func roundToPrecision(val float64, precision uint) float64 {

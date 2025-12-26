@@ -12,24 +12,26 @@ import (
 )
 
 type MovieResponse struct {
-	ID          uuid.UUID `json:"id"`
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
-	Title       string    `json:"name"`
-	Description string    `json:"description"`
-	ImageURL    string    `json:"image_url"`
-	Rating      float64   `json:"rating"`
+	ID            uuid.UUID `json:"id"`
+	CreatedAt     time.Time `json:"created_at"`
+	UpdatedAt     time.Time `json:"updated_at"`
+	Title         string    `json:"name"`
+	Description   string    `json:"description"`
+	ImageURL      string    `json:"image_url"`
+	Rating        float64   `json:"rating"`
+	LengthMinutes int       `json:"length_minutes"`
 }
 
 func newMovieResponse(movie models.Movie) MovieResponse {
 	return MovieResponse{
-		ID:          movie.ID,
-		CreatedAt:   movie.CreatedAt,
-		UpdatedAt:   movie.UpdatedAt,
-		Title:       movie.Title,
-		Description: movie.Description,
-		ImageURL:    movie.ImageURL,
-		Rating:      movie.Rating,
+		ID:            movie.ID,
+		CreatedAt:     movie.CreatedAt,
+		UpdatedAt:     movie.UpdatedAt,
+		Title:         movie.Title,
+		Description:   movie.Description,
+		ImageURL:      movie.ImageURL,
+		Rating:        movie.Rating,
+		LengthMinutes: movie.LengthMinutes,
 	}
 }
 
@@ -70,10 +72,11 @@ func MoviesList(c *gin.Context) {
 }
 
 type MovieRequest struct {
-	Title       string  `json:"title" binding:"required,min=3"`
-	Description string  `json:"description" binding:"required,min=10"`
-	ImageURL    string  `json:"image_url" binding:"required,url"`
-	Rating      float64 `json:"rating" binding:"required,min=0,max=10"`
+	Title         string  `json:"title" binding:"required,min=3"`
+	Description   string  `json:"description" binding:"required,min=10"`
+	ImageURL      string  `json:"image_url" binding:"required,url"`
+	Rating        float64 `json:"rating" binding:"required,min=0,max=10"`
+	LengthMinutes int     `json:"length_minutes" binding:"required,min=10,max=1000"`
 }
 
 // MoviesCreate
@@ -101,11 +104,12 @@ func MoviesCreate(c *gin.Context) {
 	}
 
 	movie := models.Movie{
-		ID:          uuid.New(),
-		Title:       req.Title,
-		Description: req.Description,
-		ImageURL:    req.ImageURL,
-		Rating:      req.Rating,
+		ID:            uuid.New(),
+		Title:         req.Title,
+		Description:   req.Description,
+		ImageURL:      req.ImageURL,
+		Rating:        req.Rating,
+		LengthMinutes: req.LengthMinutes,
 	}
 
 	err = movie.Create(tx)
@@ -166,6 +170,7 @@ func MoviesUpdate(c *gin.Context) {
 	movie.Description = req.Description
 	movie.ImageURL = req.ImageURL
 	movie.Rating = req.Rating
+	movie.LengthMinutes = req.LengthMinutes
 
 	err = movie.Save(tx)
 	if err != nil {

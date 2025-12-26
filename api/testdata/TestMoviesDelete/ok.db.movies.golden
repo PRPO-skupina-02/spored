@@ -6,7 +6,8 @@
 		"Title": "The Lord of the Right: The Fellowship of Token Ring",
 		"Description": "Young hobbit Frodo Baggins, after inheriting a mysterious ring from his uncle Bilbo, must leave his home in order to keep it from falling into the hands of its evil creator. Along the way, a fellowship is formed to protect the ringbearer and make sure that the ring arrives at its final destination: Mt. Doom, the only place where it can be destroyed.",
 		"ImageURL": "https://image.tmdb.org/t/p/original/3MhOQHDQjFTYPAQSmfgBbwPj1yv.jpg",
-		"Rating": 5.400000095367432
+		"Rating": 5.400000095367432,
+		"LengthMinutes": 228
 	},
 	{
 		"ID": "afddb478-e23e-11f0-92e2-3be5b904bf71",
@@ -15,6 +16,7 @@
 		"Title": "Harry Potter and the Curse of the REST API",
 		"Description": "A story about a boy living with his abusive aunt and uncle who makes pots for a living.",
 		"ImageURL": "https://image.tmdb.org/t/p/original/qwHFcFIgr4gNCsoS1dCvLoEIxqZ.jpg",
-		"Rating": 7.900000095367432
+		"Rating": 7.900000095367432,
+		"LengthMinutes": 152
 	}
 ]

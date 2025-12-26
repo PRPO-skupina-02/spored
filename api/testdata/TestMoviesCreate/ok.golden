@@ -5,5 +5,6 @@
 	"name": "TestMovie",
 	"description": "New Description",
 	"image_url": "http://example.com/image.png",
-	"rating": 7.7
+	"rating": 7.7,
+	"length_minutes": 125
 }

@@ -4,6 +4,7 @@
 	"fields": {
 		"description": "description is a required field",
 		"image_url": "image_url is a required field",
+		"length_minutes": "length_minutes is a required field",
 		"rating": "rating is a required field",
 		"title": "title is a required field"
 	}

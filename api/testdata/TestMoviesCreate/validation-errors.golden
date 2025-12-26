@@ -4,6 +4,7 @@
 	"fields": {
 		"description": "description must be at least 10 characters in length",
 		"image_url": "image_url must be a valid URL",
+		"length_minutes": "length_minutes must be 10 or greater",
 		"rating": "rating must be 10 or less",
 		"title": "title must be at least 3 characters in length"
 	}

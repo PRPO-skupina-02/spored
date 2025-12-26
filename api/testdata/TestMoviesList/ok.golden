@@ -7,7 +7,8 @@
 			"name": "Harry Potter and the Curse of the REST API",
 			"description": "A story about a boy living with his abusive aunt and uncle who makes pots for a living.",
 			"image_url": "https://image.tmdb.org/t/p/original/qwHFcFIgr4gNCsoS1dCvLoEIxqZ.jpg",
-			"rating": 7.900000095367432
+			"rating": 7.900000095367432,
+			"length_minutes": 152
 		},
 		{
 			"id": "510633ca-e23f-11f0-a626-d3b8771e2cb9",
@@ -16,7 +17,8 @@
 			"name": "Spider-Man: The rise of the Hooks",
 			"description": "A thrilling story in which our beloved Spider-Man decides to give up being a superhero to become a React developer. It portrays the struggles along his journey to figure out how to properly sync data on the frontend without causing a refresh loop.",
 			"image_url": "https://image.tmdb.org/t/p/original/3lZD5CML2V1DCozC1bu4EmlAEUf.jpg",
-			"rating": 8.399999618530273
+			"rating": 8.399999618530273,
+			"length_minutes": 117
 		},
 		{
 			"id": "27e36818-e240-11f0-bb29-538173c01e43",
@@ -25,7 +27,8 @@
 			"name": "The Lord of the Right: The Fellowship of Token Ring",
 			"description": "Young hobbit Frodo Baggins, after inheriting a mysterious ring from his uncle Bilbo, must leave his home in order to keep it from falling into the hands of its evil creator. Along the way, a fellowship is formed to protect the ringbearer and make sure that the ring arrives at its final destination: Mt. Doom, the only place where it can be destroyed.",
 			"image_url": "https://image.tmdb.org/t/p/original/3MhOQHDQjFTYPAQSmfgBbwPj1yv.jpg",
-			"rating": 5.400000095367432
+			"rating": 5.400000095367432,
+			"length_minutes": 228
 		}
 	],
 	"offset": 10,

@@ -1,0 +1,1 @@
+ALTER TABLE IF EXISTS movies DROP COLUMN IF EXISTS length_minutes;
