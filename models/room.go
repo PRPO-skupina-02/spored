@@ -57,7 +57,7 @@ func GetTheaterRooms(tx *gorm.DB, theaterID uuid.UUID, pagination *request.Pagin
 
 	query := tx.Model(&Room{}).Where("rooms.theater_id = ?", theaterID).Session(&gorm.Session{})
 
-	if err := query.Debug().Scopes(request.PaginateScope(pagination), request.SortScope(sort), PreloadOrderedTimeSlotsScope).Find(&rooms).Error; err != nil {
+	if err := query.Scopes(request.PaginateScope(pagination), request.SortScope(sort), PreloadOrderedTimeSlotsScope).Find(&rooms).Error; err != nil {
 		return nil, 0, err
 	}
 
@@ -202,12 +202,7 @@ func (tsg *TimeSlotGap) Populate(tx *gorm.DB, movies []Movie) error {
 	return nil
 }
 
-func (r *Room) PopulateSchedule(tx *gorm.DB, now time.Time, days int) error {
-	movies, _, err := GetMovies(tx, nil, nil)
-	if err != nil {
-		return err
-	}
-
+func (r *Room) PopulateRoom(tx *gorm.DB, now time.Time, days int, movies []Movie) error {
 	for day := range days {
 		slog.Debug("Populating schedule", "day", day)
 		baseDayTime := now.Add(durationDay * time.Duration(day))

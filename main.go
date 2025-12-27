@@ -12,6 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/orgs/PRPO-skupina-02/Spored/api"
 	"github.com/orgs/PRPO-skupina-02/Spored/db"
+	"github.com/orgs/PRPO-skupina-02/Spored/spored"
 )
 
 func main() {
@@ -57,6 +58,11 @@ func run() error {
 
 	router := gin.Default()
 	api.Register(router, db, trans)
+
+	err = spored.SetupCron(db)
+	if err != nil {
+		return err
+	}
 
 	slog.Info("Server startup complete")
 	err = router.Run(":8080")

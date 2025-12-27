@@ -82,3 +82,19 @@ func DeleteTheater(tx *gorm.DB, id uuid.UUID) error {
 	}
 	return nil
 }
+
+func (t *Theater) PopulateTheater(tx *gorm.DB, now time.Time, days int, movies []Movie) error {
+	rooms, _, err := GetTheaterRooms(tx, t.ID, nil, nil)
+	if err != nil {
+		return err
+	}
+
+	for _, room := range rooms {
+		err := room.PopulateRoom(tx, now, days, movies)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}

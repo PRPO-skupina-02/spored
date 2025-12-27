@@ -7,6 +7,12 @@ require github.com/stretchr/testify v1.11.1
 require github.com/PRPO-skupina-02/common v0.2.2
 
 require (
+	github.com/go-co-op/gocron/v2 v2.19.0 // indirect
+	github.com/jonboulle/clockwork v0.5.0 // indirect
+	github.com/robfig/cron/v3 v3.0.1 // indirect
+)
+
+require (
 	dario.cat/mergo v1.0.1 // indirect
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/Masterminds/goutils v1.1.1 // indirect
