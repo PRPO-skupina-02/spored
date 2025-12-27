@@ -7,7 +7,8 @@
 		"Description": "Young hobbit Frodo Baggins, after inheriting a mysterious ring from his uncle Bilbo, must leave his home in order to keep it from falling into the hands of its evil creator. Along the way, a fellowship is formed to protect the ringbearer and make sure that the ring arrives at its final destination: Mt. Doom, the only place where it can be destroyed.",
 		"ImageURL": "https://image.tmdb.org/t/p/original/3MhOQHDQjFTYPAQSmfgBbwPj1yv.jpg",
 		"Rating": 5.400000095367432,
-		"LengthMinutes": 228
+		"LengthMinutes": 228,
+		"Active": true
 	},
 	{
 		"ID": "510633ca-e23f-11f0-a626-d3b8771e2cb9",
@@ -17,7 +18,8 @@
 		"Description": "New Description",
 		"ImageURL": "http://example.com/image.png",
 		"Rating": 7.699999809265137,
-		"LengthMinutes": 125
+		"LengthMinutes": 125,
+		"Active": true
 	},
 	{
 		"ID": "afddb478-e23e-11f0-92e2-3be5b904bf71",
@@ -27,6 +29,7 @@
 		"Description": "A story about a boy living with his abusive aunt and uncle who makes pots for a living.",
 		"ImageURL": "https://image.tmdb.org/t/p/original/qwHFcFIgr4gNCsoS1dCvLoEIxqZ.jpg",
 		"Rating": 7.900000095367432,
-		"LengthMinutes": 152
+		"LengthMinutes": 152,
+		"Active": true
 	}
 ]
