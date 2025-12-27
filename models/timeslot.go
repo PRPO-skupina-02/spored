@@ -81,3 +81,11 @@ func DeleteTimeSlot(tx *gorm.DB, roomID, timeSlotID uuid.UUID) error {
 	}
 	return nil
 }
+
+func (ts *TimeSlot) CoversInstant(instant time.Time) bool {
+	if ts.StartTime.Equal(instant) {
+		return true
+	}
+
+	return ts.StartTime.Before(instant) && ts.EndTime.After(instant)
+}

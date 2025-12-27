@@ -2,6 +2,7 @@ package models
 
 import (
 	"math"
+	"math/rand/v2"
 	"time"
 
 	"github.com/PRPO-skupina-02/common/request"
@@ -19,6 +20,7 @@ type Movie struct {
 	ImageURL      string
 	Rating        float64
 	LengthMinutes int
+	Active        bool
 }
 
 func roundToPrecision(val float64, precision uint) float64 {
@@ -90,4 +92,18 @@ func DeleteMovie(tx *gorm.DB, id uuid.UUID) error {
 		return err
 	}
 	return nil
+}
+
+const breakLengthMinutes = 5
+
+func (m *Movie) CalculateEndTime(startTime time.Time) time.Time {
+	totalLength := m.LengthMinutes + breakLengthMinutes
+	roundedTo10Mins := math.Ceil(float64(totalLength)/10) * 10
+	return startTime.Add(time.Duration(roundedTo10Mins) * time.Minute)
+}
+
+func WeighedSelectMovie(movies []Movie) Movie {
+	// TODO: weigh random selection
+	selection := rand.IntN(len(movies))
+	return movies[selection]
 }

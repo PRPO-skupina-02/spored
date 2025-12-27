@@ -11,3 +11,12 @@ test-update:
 install-cli-tools:
 	go install github.com/joho/godotenv/cmd/godotenv@latest
 	go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+
+migrate:
+	migrate -database postgres://postgres:postgres@localhost/spored?sslmode=disable -path db/migrations up
+
+migrate-down: 
+	migrate -database postgres://postgres:postgres@localhost/spored?sslmode=disable -path db/migrations down
+
+fixtures:
+	godotenv go run ../common/tools/loadfixture/loadfixture.go db/fixtures/

@@ -1,6 +1,9 @@
 package models
 
 import (
+	"log/slog"
+	"math"
+	"slices"
 	"time"
 
 	"github.com/PRPO-skupina-02/common/request"
@@ -54,7 +57,7 @@ func GetTheaterRooms(tx *gorm.DB, theaterID uuid.UUID, pagination *request.Pagin
 
 	query := tx.Model(&Room{}).Where("rooms.theater_id = ?", theaterID).Session(&gorm.Session{})
 
-	if err := query.Debug().Scopes(request.PaginateScope(pagination), request.SortScope(sort)).Find(&rooms).Error; err != nil {
+	if err := query.Debug().Scopes(request.PaginateScope(pagination), request.SortScope(sort), PreloadOrderedTimeSlotsScope).Find(&rooms).Error; err != nil {
 		return nil, 0, err
 	}
 
@@ -72,7 +75,7 @@ func GetRoom(tx *gorm.DB, theaterID, roomID uuid.UUID) (Room, error) {
 		TheaterID: theaterID,
 	}
 
-	if err := tx.Where(&room).Preload("TimeSlots").First(&room).Error; err != nil {
+	if err := tx.Where(&room).Scopes(PreloadOrderedTimeSlotsScope).First(&room).Error; err != nil {
 		return room, err
 	}
 
@@ -85,7 +88,7 @@ func DeleteRoom(tx *gorm.DB, theaterID, id uuid.UUID) error {
 		TheaterID: theaterID,
 	}
 
-	if err := tx.Where(&room).Preload("TimeSlots").First(&room).Error; err != nil {
+	if err := tx.Where(&room).Scopes(PreloadOrderedTimeSlotsScope).First(&room).Error; err != nil {
 		return err
 	}
 
@@ -99,5 +102,124 @@ func DeleteRoom(tx *gorm.DB, theaterID, id uuid.UUID) error {
 	if err := tx.Delete(&room).Error; err != nil {
 		return err
 	}
+	return nil
+}
+
+func PreloadOrderedTimeSlotsScope(db *gorm.DB) *gorm.DB {
+	return db.Preload("TimeSlots", func(db *gorm.DB) *gorm.DB {
+		return db.Order("time_slots.start_time")
+	})
+}
+
+const durationDay = time.Hour * 24
+
+func (r *Room) GetTimes(day time.Time) (openingTime time.Time, closingTime time.Time) {
+	baseDayTime := day.Truncate(durationDay)
+	openingTime = baseDayTime.Add(time.Hour * time.Duration(r.OpeningHour))
+	closingTime = baseDayTime.Add(time.Hour * time.Duration(r.ClosingHour))
+	return
+}
+
+type TimeSlotGap struct {
+	room  *Room
+	start time.Time
+	end   time.Time
+}
+
+func (r *Room) GetTimeSlotGapsForDay(day time.Time) []TimeSlotGap {
+	startTime, closingTime := r.GetTimes(day)
+	gaps := []TimeSlotGap{}
+
+	for _, timeslot := range r.TimeSlots {
+		if startTime.After(closingTime) {
+			break
+		}
+
+		if !timeslot.CoversInstant(startTime) {
+			gaps = append(gaps, TimeSlotGap{
+				room:  r,
+				start: startTime,
+				end:   timeslot.StartTime,
+			})
+		}
+
+		startTime = timeslot.EndTime
+	}
+
+	gaps = append(gaps, TimeSlotGap{
+		room:  r,
+		start: startTime,
+		end:   closingTime,
+	})
+
+	return gaps
+}
+
+func (tsg *TimeSlotGap) Populate(tx *gorm.DB, movies []Movie) error {
+	slog.Debug("Populating time gap", "start", tsg.start, "end", tsg.end)
+	startTime := tsg.start
+	for startTime.Before(tsg.end) {
+		remainingMinutes := int(math.Floor(tsg.end.Sub(startTime).Minutes()))
+
+		possibleMovies := slices.Collect(func(yield func(Movie) bool) {
+			for _, movie := range movies {
+				if movie.LengthMinutes <= remainingMinutes {
+					if !yield(movie) {
+						return
+					}
+				}
+			}
+		})
+
+		slog.Debug("Selecting movie", "startTime", startTime, "optionsLen", len(possibleMovies))
+
+		if len(possibleMovies) == 0 {
+			slog.Debug("No more possible movies")
+			break
+		}
+
+		selectedMovie := WeighedSelectMovie(possibleMovies)
+		slog.Debug("Selected movie", "title", selectedMovie.Title)
+		calculatedEndTime := selectedMovie.CalculateEndTime(startTime)
+
+		timeSlot := TimeSlot{
+			ID:        uuid.New(),
+			StartTime: startTime,
+			EndTime:   calculatedEndTime,
+			RoomID:    tsg.room.ID,
+			MovieID:   selectedMovie.ID,
+		}
+
+		err := timeSlot.Create(tx)
+		if err != nil {
+			return err
+		}
+
+		startTime = calculatedEndTime
+	}
+
+	slog.Debug("Finished populating time gap", "start", tsg.start, "end", tsg.end)
+	return nil
+}
+
+func (r *Room) PopulateSchedule(tx *gorm.DB, now time.Time, days int) error {
+	movies, _, err := GetMovies(tx, nil, nil)
+	if err != nil {
+		return err
+	}
+
+	for day := range days {
+		slog.Debug("Populating schedule", "day", day)
+		baseDayTime := now.Add(durationDay * time.Duration(day))
+		gaps := r.GetTimeSlotGapsForDay(baseDayTime)
+		for _, gap := range gaps {
+			err := gap.Populate(tx, movies)
+			if err != nil {
+				return err
+			}
+		}
+		slog.Debug("Finished populating schedule", "day", day)
+	}
+
 	return nil
 }
