@@ -64,6 +64,10 @@ func Register(router *gin.Engine, db *gorm.DB, trans ut.Translator) {
 	movies.PUT("", MoviesUpdate)
 	movies.DELETE("", MoviesDelete)
 
+	// TimeSlots
+
+	theaters.GET("/rooms/:roomID/timeslots", TimeSlotsList)
+
 }
 
 func healthcheck(c *gin.Context) {
