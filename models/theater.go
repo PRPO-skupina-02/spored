@@ -98,3 +98,19 @@ func (t *Theater) PopulateTheater(tx *gorm.DB, now time.Time, days int, movies [
 
 	return nil
 }
+
+func (t *Theater) PruneTheater(tx *gorm.DB, before time.Time) error {
+	rooms, _, err := GetTheaterRooms(tx, t.ID, nil, nil)
+	if err != nil {
+		return err
+	}
+
+	for _, room := range rooms {
+		err := room.PruneRoom(tx, before)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}

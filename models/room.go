@@ -207,7 +207,7 @@ func (tsg *TimeSlotGap) Populate(tx *gorm.DB, movies []Movie) error {
 
 func (r *Room) PopulateRoom(tx *gorm.DB, now time.Time, days int, movies []Movie) error {
 	for day := range days {
-		slog.Debug("Populating schedule", "day", day)
+		slog.Debug("Refreshing timeslots", "room", r.ID, "day", day)
 		baseDayTime := now.Add(durationDay * time.Duration(day))
 		gaps := r.GetTimeSlotGapsForDay(baseDayTime)
 		for _, gap := range gaps {
@@ -216,8 +216,30 @@ func (r *Room) PopulateRoom(tx *gorm.DB, now time.Time, days int, movies []Movie
 				return err
 			}
 		}
-		slog.Debug("Finished populating schedule", "day", day)
+		slog.Debug("Finished refreshing timeslots", "room", r.ID, "day", day)
 	}
+
+	return nil
+}
+
+func (r *Room) PruneRoom(tx *gorm.DB, before time.Time) error {
+	slog.Debug("Pruning timeslots", "room", r.ID)
+
+	timeslots, _, err := GetRoomTimeSlots(tx, r.ID, nil, &request.SortOptions{Column: "end_time", Desc: false})
+	if err != nil {
+		return err
+	}
+
+	for _, timeslot := range timeslots {
+		if timeslot.EndTime.Before(before) {
+			err := DeleteTimeSlot(tx, r.ID, timeslot.ID)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	slog.Debug("Finished pruning timeslots", "room", r.ID)
 
 	return nil
 }
