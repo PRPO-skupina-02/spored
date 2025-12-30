@@ -13,6 +13,16 @@ func SetupCron(db *gorm.DB) error {
 		return err
 	}
 
+	// Populate on startup
+	_, err = s.NewJob(
+		gocron.OneTimeJob(gocron.OneTimeJobStartImmediately()),
+		gocron.NewTask(PopulateSpored, db),
+	)
+	if err != nil {
+		return err
+	}
+
+	// Daily schedule population
 	j, err := s.NewJob(
 		gocron.DailyJob(1, gocron.NewAtTimes(gocron.NewAtTime(0, 0, 0))),
 		gocron.NewTask(PopulateSpored, db),
