@@ -4,7 +4,7 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/orgs/PRPO-skupina-02/Spored/models"
+	"github.com/orgs/PRPO-skupina-02/spored/models"
 	"gorm.io/gorm"
 )
 
