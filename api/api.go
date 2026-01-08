@@ -6,7 +6,7 @@ import (
 	"github.com/PRPO-skupina-02/common/middleware"
 	"github.com/gin-gonic/gin"
 	ut "github.com/go-playground/universal-translator"
-	_ "github.com/orgs/PRPO-skupina-02/Spored/api/docs"
+	_ "github.com/orgs/PRPO-skupina-02/spored/api/docs"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"gorm.io/gorm"
