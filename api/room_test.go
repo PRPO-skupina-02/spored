@@ -9,8 +9,8 @@ import (
 
 	"github.com/PRPO-skupina-02/common/database"
 	"github.com/PRPO-skupina-02/common/xtesting"
-	"github.com/orgs/PRPO-skupina-02/spored/db"
-	"github.com/orgs/PRPO-skupina-02/spored/models"
+	"github.com/PRPO-skupina-02/spored/db"
+	"github.com/PRPO-skupina-02/spored/models"
 	"github.com/stretchr/testify/assert"
 )
 

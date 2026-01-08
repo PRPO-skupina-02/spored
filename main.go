@@ -9,10 +9,10 @@ import (
 	"github.com/PRPO-skupina-02/common/config"
 	"github.com/PRPO-skupina-02/common/database"
 	"github.com/PRPO-skupina-02/common/validation"
+	"github.com/PRPO-skupina-02/spored/api"
+	"github.com/PRPO-skupina-02/spored/db"
+	"github.com/PRPO-skupina-02/spored/spored"
 	"github.com/gin-gonic/gin"
-	"github.com/orgs/PRPO-skupina-02/spored/api"
-	"github.com/orgs/PRPO-skupina-02/spored/db"
-	"github.com/orgs/PRPO-skupina-02/spored/spored"
 )
 
 func main() {

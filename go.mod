@@ -1,4 +1,4 @@
-module github.com/orgs/PRPO-skupina-02/spored
+module github.com/PRPO-skupina-02/spored
 
 go 1.25.1
 

@@ -4,9 +4,9 @@ import (
 	"net/http"
 
 	"github.com/PRPO-skupina-02/common/middleware"
+	_ "github.com/PRPO-skupina-02/spored/api/docs"
 	"github.com/gin-gonic/gin"
 	ut "github.com/go-playground/universal-translator"
-	_ "github.com/orgs/PRPO-skupina-02/spored/api/docs"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"gorm.io/gorm"

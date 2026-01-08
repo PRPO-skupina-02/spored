@@ -5,9 +5,9 @@ import (
 
 	"github.com/PRPO-skupina-02/common/middleware"
 	"github.com/PRPO-skupina-02/common/request"
+	"github.com/PRPO-skupina-02/spored/models"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"github.com/orgs/PRPO-skupina-02/spored/models"
 )
 
 type TimeSlotResponse struct {
