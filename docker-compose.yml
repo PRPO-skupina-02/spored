@@ -1,0 +1,41 @@
+services:
+
+  db:
+    image: postgres:17
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: spored
+    volumes:
+      - pgdata:/var/lib/postgresql/data 
+    ports:
+      - 5432:5432
+    networks:
+      - cinecore-net
+
+  spored:
+    ports:
+      - "8080:8080"
+    networks:
+      - cinecore-net
+    build: .
+    depends_on:
+      - db
+    environment:
+      - LOG_LEVEL=DEBUG
+      - TZ=
+      - POSTGRES_IP=db
+      - POSTGRES_PORT=5432
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DATABASE_NAME=spored
+      - POSTGRES_TEST_DATABASE_NAME=spored_test
+
+networks:
+  cinecore-net:
+    name: cinecore-net
+    driver: bridge
+
+volumes:
+  pgdata:
