@@ -3,7 +3,7 @@ module github.com/PRPO-skupina-02/spored
 go 1.25.1
 
 require (
-	github.com/PRPO-skupina-02/common v0.3.1
+	github.com/PRPO-skupina-02/common v0.4.0
 	github.com/gin-gonic/gin v1.11.0
 	github.com/go-co-op/gocron/v2 v2.19.0
 	github.com/go-playground/universal-translator v0.18.1

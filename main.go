@@ -1,13 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"log/slog"
 	"os"
 
-	"github.com/PRPO-skupina-02/common/config"
 	"github.com/PRPO-skupina-02/common/database"
+	"github.com/PRPO-skupina-02/common/logging"
 	"github.com/PRPO-skupina-02/common/validation"
 	"github.com/PRPO-skupina-02/spored/api"
 	"github.com/PRPO-skupina-02/spored/db"
@@ -27,23 +26,7 @@ func main() {
 func run() error {
 	slog.Info("Starting server")
 
-	var logger *slog.Logger
-
-	logLevelConfig := config.GetEnvDefault("LOG_LEVEL", "INFO")
-	var logLevel = new(slog.LevelVar)
-	switch logLevelConfig {
-	case "DEBUG":
-		logLevel.Set(slog.LevelDebug)
-	case "INFO":
-		logLevel.Set(slog.LevelInfo)
-	case "ERROR":
-		logLevel.Set(slog.LevelError)
-	default:
-		logLevel.Set(slog.LevelInfo)
-	}
-	slog.Info(fmt.Sprintf("Log level: %s", logLevel.Level()))
-	logHandler := slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: logLevel})
-	logger = slog.New(logHandler)
+	logger := logging.GetDefaultLogger()
 	slog.SetDefault(logger)
 
 	db, err := database.OpenAndMigrateProd(db.MigrationsFS)
