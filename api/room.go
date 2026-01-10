@@ -76,12 +76,12 @@ func RoomsList(c *gin.Context) {
 }
 
 type RoomRequest struct {
-	Name          string                   `json:"name" binding:"required,min=3"`
-	Rows          int                      `json:"rows" binding:"required,min=1,max=100"`
-	Columns       int                      `json:"columns" binding:"required,min=1,max=100"`
-	OperatingMode models.RoomOperatingMode `json:"operating_mode" binding:"required,oneof=CLOSED WEEKDAYS WEEKENDS ALL"`
-	OpeningHour   int                      `json:"opening_hour" binding:"required,min=0,max=24"`
-	ClosingHour   int                      `json:"closing_hour" binding:"required,min=0,max=24"`
+	Name          string `json:"name" binding:"required,min=3"`
+	Rows          int    `json:"rows" binding:"required,min=1,max=100"`
+	Columns       int    `json:"columns" binding:"required,min=1,max=100"`
+	OperatingMode string `json:"operating_mode" binding:"required,oneof=CLOSED WEEKDAYS WEEKENDS ALL" enums:"CLOSED,WEEKDAYS,WEEKENDS,ALL"`
+	OpeningHour   int    `json:"opening_hour" binding:"required,min=0,max=24"`
+	ClosingHour   int    `json:"closing_hour" binding:"required,min=0,max=24"`
 }
 
 // RoomsCreate
@@ -116,7 +116,7 @@ func RoomsCreate(c *gin.Context) {
 		Name:          req.Name,
 		Rows:          req.Rows,
 		Columns:       req.Columns,
-		OperatingMode: req.OperatingMode,
+		OperatingMode: models.RoomOperatingMode(req.OperatingMode),
 		OpeningHour:   req.OpeningHour,
 		ClosingHour:   req.ClosingHour,
 	}
@@ -204,7 +204,7 @@ func RoomsUpdate(c *gin.Context) {
 	room.Name = req.Name
 	room.Rows = req.Rows
 	room.Columns = req.Columns
-	room.OperatingMode = req.OperatingMode
+	room.OperatingMode = models.RoomOperatingMode(req.OperatingMode)
 	room.OpeningHour = req.OpeningHour
 	room.ClosingHour = req.ClosingHour
 

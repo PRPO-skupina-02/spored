@@ -66,13 +66,12 @@ definitions:
         minimum: 0
         type: integer
       operating_mode:
-        allOf:
-        - $ref: '#/definitions/models.RoomOperatingMode'
         enum:
         - CLOSED
         - WEEKDAYS
         - WEEKENDS
         - ALL
+        type: string
       rows:
         maximum: 100
         minimum: 1
