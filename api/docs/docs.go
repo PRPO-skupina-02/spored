@@ -1135,16 +1135,12 @@ const docTemplate = `{
                     "minimum": 0
                 },
                 "operating_mode": {
+                    "type": "string",
                     "enum": [
                         "CLOSED",
                         "WEEKDAYS",
                         "WEEKENDS",
                         "ALL"
-                    ],
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/models.RoomOperatingMode"
-                        }
                     ]
                 },
                 "rows": {

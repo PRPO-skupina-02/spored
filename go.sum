@@ -12,8 +12,6 @@ github.com/Masterminds/sprig/v3 v3.3.0 h1:mQh0Yrg1XPo6vjYXgtf5OtijNAKJRNcTdOOGZe
 github.com/Masterminds/sprig/v3 v3.3.0/go.mod h1:Zy1iXRYNqNLUolqCpL4uhk6SHUMAOSCzdgBfDb35Lz0=
 github.com/Microsoft/go-winio v0.6.2 h1:F2VQgta7ecxGYO8k3ZZz3RS8fVIXVxONVUPlNERoyfY=
 github.com/Microsoft/go-winio v0.6.2/go.mod h1:yd8OoFMLzJbo9gZq8j5qaps8bJ9aShtEA8Ipt1oGCvU=
-github.com/PRPO-skupina-02/common v0.3.1 h1:TGqmJhnB3MsZrtn85pZmk1RqkAW24FOFVGfcLunTBzY=
-github.com/PRPO-skupina-02/common v0.3.1/go.mod h1:GtaOsn3KRtMRM4/Raw9G0ob1eCCojFwQEhkCisNyS+Q=
 github.com/PRPO-skupina-02/common v0.4.0 h1:ohJ5ADaQxez20oKcssOGSHz2MWWyZ3uuIfexPLqaW0M=
 github.com/PRPO-skupina-02/common v0.4.0/go.mod h1:GtaOsn3KRtMRM4/Raw9G0ob1eCCojFwQEhkCisNyS+Q=
 github.com/buger/jsonparser v1.1.1 h1:2PnMjfWD7wBILjqQbt530v576A/cAbQvEW9gGIpYMUs=
