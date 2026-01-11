@@ -33,6 +33,11 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DATABASE_NAME=spored
       - POSTGRES_TEST_DATABASE_NAME=spored_test
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/healthcheck"]
+      interval: 3s
+      timeout: 10s
+      retries: 5
 
 volumes:
   spored-pgdata:
