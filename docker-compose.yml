@@ -1,6 +1,6 @@
 services:
 
-  db:
+  spored-db:
     image: postgres:17
     restart: always
     environment:
@@ -21,13 +21,15 @@ services:
   spored:
     ports:
       - "8080:8080"
+    restart: always
     build: .
     depends_on:
-      - db
+      spored-db:
+        condition: service_healthy
     environment:
       - LOG_LEVEL=DEBUG
       - TZ=
-      - POSTGRES_IP=db
+      - POSTGRES_IP=spored-db
       - POSTGRES_PORT=5432
       - POSTGRES_USERNAME=postgres
       - POSTGRES_PASSWORD=postgres
