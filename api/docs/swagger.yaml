@@ -164,6 +164,16 @@ definitions:
     - Weekdays
     - Weekends
     - All
+  request.PaginatedResponse:
+    properties:
+      data: {}
+      limit:
+        type: integer
+      offset:
+        type: integer
+      total:
+        type: integer
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -198,9 +208,14 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/api.MovieResponse'
-            type: array
+            allOf:
+            - $ref: '#/definitions/request.PaginatedResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/api.MovieResponse'
+                  type: array
+              type: object
         "400":
           description: Bad Request
           schema:
@@ -384,9 +399,14 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/api.TheaterResponse'
-            type: array
+            allOf:
+            - $ref: '#/definitions/request.PaginatedResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/api.TheaterResponse'
+                  type: array
+              type: object
         "400":
           description: Bad Request
           schema:
@@ -576,9 +596,14 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/api.RoomResponse'
-            type: array
+            allOf:
+            - $ref: '#/definitions/request.PaginatedResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/api.RoomResponse'
+                  type: array
+              type: object
         "400":
           description: Bad Request
           schema:
@@ -798,9 +823,14 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/api.TimeSlotResponse'
-            type: array
+            allOf:
+            - $ref: '#/definitions/request.PaginatedResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/api.TimeSlotResponse'
+                  type: array
+              type: object
         "400":
           description: Bad Request
           schema:
