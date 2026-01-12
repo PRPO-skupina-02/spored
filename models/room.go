@@ -225,7 +225,7 @@ func (r *Room) PopulateRoom(tx *gorm.DB, now time.Time, days int, movies []Movie
 func (r *Room) PruneRoom(tx *gorm.DB, before time.Time) error {
 	slog.Debug("Pruning timeslots", "room", r.ID)
 
-	timeslots, _, err := GetRoomTimeSlots(tx, r.ID, nil, &request.SortOptions{Column: "end_time", Desc: false})
+	timeslots, _, err := GetRoomTimeSlots(tx, r.ID, nil, &request.SortOptions{Column: "end_time", Desc: false}, nil)
 	if err != nil {
 		return err
 	}

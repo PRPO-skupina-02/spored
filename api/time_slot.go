@@ -46,6 +46,7 @@ func newTimeSlotResponse(timeSlot models.TimeSlot) TimeSlotResponse {
 //	@Param			limit		query		int		false	"Limit the number of responses"	Default(10)
 //	@Param			offset		query		int		false	"Offset the first response"		Default(0)
 //	@Param			sort		query		string	false	"Sort results"
+//	@Param			date		query		string	false	"Filter by date (YYYY-MM-DD)"	Format(date)
 //	@Success		200			{object}	request.PaginatedResponse{data=[]TimeSlotResponse}
 //	@Failure		400			{object}	middleware.HttpError
 //	@Failure		404			{object}	middleware.HttpError
@@ -56,6 +57,8 @@ func TimeSlotsList(c *gin.Context) {
 	theater := GetContextTheater(c)
 	pagination := request.GetNormalizedPaginationArgs(c)
 	sort := request.GetSortOptions(c)
+	filter := request.GetDateFilter(c, "start_time")
+	filters := request.NewFilterOptions(filter)
 
 	id, err := request.GetUUIDParam(c, "roomID")
 	if err != nil {
@@ -69,7 +72,7 @@ func TimeSlotsList(c *gin.Context) {
 		return
 	}
 
-	timeSlots, total, err := models.GetRoomTimeSlots(tx, room.ID, pagination, sort)
+	timeSlots, total, err := models.GetRoomTimeSlots(tx, room.ID, pagination, sort, filters)
 	if err != nil {
 		_ = c.Error(err)
 		return

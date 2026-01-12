@@ -817,6 +817,11 @@ paths:
         in: query
         name: sort
         type: string
+      - description: Filter by date (YYYY-MM-DD)
+        format: date
+        in: query
+        name: date
+        type: string
       produces:
       - application/json
       responses:

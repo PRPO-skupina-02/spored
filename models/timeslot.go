@@ -36,10 +36,10 @@ func (ts *TimeSlot) Save(tx *gorm.DB) error {
 	return nil
 }
 
-func GetRoomTimeSlots(tx *gorm.DB, roomID uuid.UUID, pagination *request.PaginationOptions, sort *request.SortOptions) ([]TimeSlot, int, error) {
+func GetRoomTimeSlots(tx *gorm.DB, roomID uuid.UUID, pagination *request.PaginationOptions, sort *request.SortOptions, filters *request.FilterOptions) ([]TimeSlot, int, error) {
 	var timeSlots []TimeSlot
 
-	query := tx.Model(&TimeSlot{}).Where("time_slots.room_id = ?", roomID).Session(&gorm.Session{})
+	query := tx.Model(&TimeSlot{}).Where("time_slots.room_id = ?", roomID).Scopes(request.FilterScope(filters)).Session(&gorm.Session{})
 
 	if err := query.Scopes(request.PaginateScope(pagination), request.SortScope(sort)).Preload("Movie").Find(&timeSlots).Error; err != nil {
 		return nil, 0, err

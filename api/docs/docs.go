@@ -969,6 +969,13 @@ const docTemplate = `{
                         "description": "Sort results",
                         "name": "sort",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "format": "date",
+                        "description": "Filter by date (YYYY-MM-DD)",
+                        "name": "date",
+                        "in": "query"
                     }
                 ],
                 "responses": {
