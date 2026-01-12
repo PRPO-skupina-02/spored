@@ -19,7 +19,7 @@ import (
 //	@host		localhost:8080
 //	@BasePath	/api/v1/spored
 
-func Register(router *gin.Engine, db *gorm.DB, trans ut.Translator) {
+func Register(router *gin.Engine, db *gorm.DB, trans ut.Translator, authHost string) {
 	// Healthcheck
 	router.GET("/healthcheck", healthcheck)
 
@@ -33,39 +33,51 @@ func Register(router *gin.Engine, db *gorm.DB, trans ut.Translator) {
 	v1.Use(middleware.ErrorMiddleware)
 
 	// Theaters
+	v1.GET("/theaters", TheatersList)
 	theaters := v1.Group("/theaters/:theaterID")
 	theaters.Use(TheaterContextMiddleware)
-
-	theatersRestricted := theaters.Group("")
-	theatersRestricted.Use(TheaterPermissionsMiddleware)
-
-	v1.GET("/theaters", TheatersList)
 	theaters.GET("", TheatersShow)
-	v1.POST("/theaters", TheatersCreate)
 
-	theatersRestricted.PUT("", TheatersUpdate)
-	theatersRestricted.DELETE("", TheatersDelete)
+	theatersAdmin := v1.Group("/theaters")
+	theatersAdmin.Use(middleware.UserMiddleware(authHost))
+	theatersAdmin.Use(middleware.RequireAdmin())
+	theatersAdmin.POST("", TheatersCreate)
+
+	theatersAdminWithID := theaters.Group("")
+	theatersAdminWithID.Use(middleware.UserMiddleware(authHost))
+	theatersAdminWithID.Use(middleware.RequireAdmin())
+	theatersAdminWithID.PUT("", TheatersUpdate)
+	theatersAdminWithID.DELETE("", TheatersDelete)
 
 	// Rooms
 	theaters.GET("/rooms", RoomsList)
 	theaters.GET("/rooms/:roomID", RoomsShow)
-	theatersRestricted.POST("/rooms", RoomsCreate)
-	theatersRestricted.PUT("/rooms/:roomID", RoomsUpdate)
-	theatersRestricted.DELETE("/rooms/:roomID", RoomsDelete)
+
+	roomsAdmin := theaters.Group("/rooms")
+	roomsAdmin.Use(middleware.UserMiddleware(authHost))
+	roomsAdmin.Use(middleware.RequireAdmin())
+	roomsAdmin.POST("", RoomsCreate)
+	roomsAdmin.PUT("/:roomID", RoomsUpdate)
+	roomsAdmin.DELETE("/:roomID", RoomsDelete)
 
 	// Movies
+	v1.GET("/movies", MoviesList)
 	movies := v1.Group("/movies/:movieID")
 	movies.Use(MovieContextMiddleware)
-
-	v1.GET("/movies", MoviesList)
 	movies.GET("", MoviesShow)
-	v1.POST("/movies", MoviesCreate)
 
-	movies.PUT("", MoviesUpdate)
-	movies.DELETE("", MoviesDelete)
+	moviesAdmin := v1.Group("/movies")
+	moviesAdmin.Use(middleware.UserMiddleware(authHost))
+	moviesAdmin.Use(middleware.RequireAdmin())
+	moviesAdmin.POST("", MoviesCreate)
+
+	moviesAdminWithID := movies.Group("")
+	moviesAdminWithID.Use(middleware.UserMiddleware(authHost))
+	moviesAdminWithID.Use(middleware.RequireAdmin())
+	moviesAdminWithID.PUT("", MoviesUpdate)
+	moviesAdminWithID.DELETE("", MoviesDelete)
 
 	// TimeSlots
-
 	theaters.GET("/rooms/:roomID/timeslots", TimeSlotsList)
 	theaters.GET("/rooms/:roomID/timeslots/:timeSlotID", TimeSlotsShow)
 }

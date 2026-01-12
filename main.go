@@ -5,6 +5,7 @@ import (
 	"log/slog"
 	"os"
 
+	"github.com/PRPO-skupina-02/common/config"
 	"github.com/PRPO-skupina-02/common/database"
 	"github.com/PRPO-skupina-02/common/logging"
 	"github.com/PRPO-skupina-02/common/validation"
@@ -39,8 +40,10 @@ func run() error {
 		return err
 	}
 
+	authHost := config.GetEnv("AUTH_HOST")
+
 	router := gin.Default()
-	api.Register(router, db, trans)
+	api.Register(router, db, trans, authHost)
 
 	err = spored.SetupCron(db)
 	if err != nil {
