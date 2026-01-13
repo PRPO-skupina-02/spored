@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: spored-config
+  namespace: production
+data:
+  LOG_LEVEL: "INFO"
+  AUTH_HOST: "http://auth:8080"
